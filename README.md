@@ -63,20 +63,26 @@ This system provides a secure platform for the complete certificate lifecycle - 
 The application consists of 4 independent services communicating via HTTP REST APIs:
 
 ```
-Frontend (React + TypeScript)
-              │
-              ▼
-      API Gateway (Node.js)
-              │
-    ┌─────────┼─────────┬──────────┐
-    ▼         ▼         ▼          ▼
-  Auth    University  Cert    Verification
-  3001      3002      3003        3004
-    │         │         │          │
-    └─────────┴─────────┴──────────┘
-              │
-              ▼
-       PostgreSQL Database
+┌─────────────────────────────────────────────────────────────┐
+│                        Frontend Layer                       │
+│    Student Portal │ University Portal │ Employer │ Admin    │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+┌────────────────────────▼────────────────────────────────────┐
+│                      API Gateway                            │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+        ┌────────────────┼────────────────┬─────────────┐
+        │                │                │             │
+┌───────▼──────┐ ┌──────▼──────┐ ┌──────▼──────┐ ┌───▼────────┐
+│    Auth      │ │ University  │ │Certificate  │ │Verification│
+│   Service    │ │  Service    │ │  Service    │ │  Service   │
+│   (3001)     │ │   (3002)    │ │   (3003)    │ │   (3004)   │
+└──────┬───────┘ └──────┬──────┘ └──────┬──────┘ └────────────┘
+       │                │                │
+┌──────▼──────┐ ┌───────▼───────┐ ┌─────▼──────┐
+│   auth_db   │ │ university_db │ │   cert_db  │
+└─────────────┘ └───────────────┘ └────────────┘
 ```
 
 ## Quick Start
