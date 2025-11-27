@@ -1,257 +1,511 @@
-# Student Certificate Management System# Student Certificate Management System
+# Student Certificate Management System# Student Certificate Management System# Student Certificate Management System
 
 
 
-A comprehensive microservices-based platform for managing and verifying student academic certificates with digital signatures.A web application for managing and verifying student certificates. Universities can issue digital certificates, students can access their records, and employers can verify certificate authenticity in real-time.
+A comprehensive microservices-based platform for managing and verifying student academic certificates with digital signatures.
 
 
 
-## Overview## 🎯 Overview
+## OverviewA comprehensive microservices-based platform for managing and verifying student academic certificates with digital signatures.A web application for managing and verifying student certificates. Universities can issue digital certificates, students can access their records, and employers can verify certificate authenticity in real-time.
 
 
 
-This system provides a secure and efficient way to issue, manage, and verify student certificates. Built with a modern microservices architecture, it ensures scalability, maintainability, and reliability.This system provides a secure platform for the complete certificate lifecycle - from issuance by universities to verification by employers, eliminating manual verification processes and preventing fraud.
+This system provides a secure and efficient way to issue, manage, and verify student certificates. Built with a modern microservices architecture, it ensures scalability, maintainability, and reliability.
 
 
 
-## Features## 🛠 Tech Stack
+## Features## Overview## 🎯 Overview
 
 
 
-### For Students- **Backend:** Java 17+, Spring Boot 3.x, Feign Client, PostgreSQL
+### For Students
 
-- Request and download verified certificates- **Frontend:** React 18+, TypeScript
+- Request and download verified certificates
 
-- View certificate history and status- **API:** REST (HTTP), Swagger/OpenAPI 3.0
+- View certificate history and statusThis system provides a secure and efficient way to issue, manage, and verify student certificates. Built with a modern microservices architecture, it ensures scalability, maintainability, and reliability.This system provides a secure platform for the complete certificate lifecycle - from issuance by universities to verification by employers, eliminating manual verification processes and preventing fraud.
 
-- Track verification requests- **Testing:** Bruno
+- Track verification requests
 
 - Secure profile management
 
-## 🏗 Architecture
 
-### For Universities
 
-- Issue digital certificates with secure signaturesThe application consists of 4 independent services communicating via HTTP REST APIs:
+### For Universities## Features## 🛠 Tech Stack
 
-- Manage certificate templates```
+- Issue digital certificates with secure signatures
 
-- Track certificate issuanceFrontend (React + TypeScript)
+- Manage certificate templates
 
-- Bulk certificate generation         │
+- Track certificate issuance
 
-    ┌────┼─────┬────────┬──────────┐
+- Bulk certificate generation### For Students- **Backend:** Java 17+, Spring Boot 3.x, Feign Client, PostgreSQL
 
-### For Employers    ▼    ▼     ▼        ▼          │
 
-- Quick certificate verification  Auth  Univ  Cert  Verification   │
 
-- Batch verification support  3001  3002  3003      3004       │
+### For Employers- Request and download verified certificates- **Frontend:** React 18+, TypeScript
 
-- Detailed verification reports                    │               │
+- Quick certificate verification
 
-- Real-time validation              Feign Client          │
+- Batch verification support- View certificate history and status- **API:** REST (HTTP), Swagger/OpenAPI 3.0
 
-                    │               │
+- Detailed verification reports
 
-### For Administrators              ┌─────┴───────────────┘
+- Real-time validation- Track verification requests- **Testing:** Bruno
 
-- System-wide monitoring and analytics              ▼
 
-- User management across all roles          Database
 
-- Audit logs and compliance tracking```
+### For Administrators- Secure profile management
 
-- System configuration
+- System-wide monitoring and analytics
 
-## 🚀 Quick Start
+- User management across all roles## 🏗 Architecture
 
-## Technology Stack
+- Audit logs and compliance tracking
 
-### Backend Setup
+- System configuration### For Universities
 
-### Backend```bash
 
-- **Java 17** with Spring Boot 3.3.x# Start each service in separate terminals
 
-- **Microservices Architecture**cd backend/auth-service && ./mvnw spring-boot:run        # Port 3001
+## Technology Stack- Issue digital certificates with secure signaturesThe application consists of 4 independent services communicating via HTTP REST APIs:
 
-  - API Gateway (Node.js/Express)cd backend/university-service && ./mvnw spring-boot:run  # Port 3002
 
-  - Authentication Service (Spring Security + JWT)cd backend/certificate-service && ./mvnw spring-boot:run # Port 3003
 
-  - University Servicecd backend/verification-service && ./mvnw spring-boot:run # Port 3004
+### Backend- Manage certificate templates```
 
-  - Certificate Service```
+- **Java 17** with Spring Boot 3.3.x
+
+- **Microservices Architecture**- Track certificate issuanceFrontend (React + TypeScript)
+
+  - API Gateway (Node.js/Express)
+
+  - Authentication Service (Spring Security + JWT)- Bulk certificate generation         │
+
+  - University Service
+
+  - Certificate Service    ┌────┼─────┬────────┬──────────┐
 
   - Verification Service
 
-- **Database**: PostgreSQL### Frontend Setup
+- **Database**: PostgreSQL### For Employers    ▼    ▼     ▼        ▼          │
 
-- **Message Queue**: RabbitMQ/Kafka```bash
+- **Message Queue**: RabbitMQ/Kafka
 
-- **API Documentation**: OpenAPI/Swaggercd frontend
-
-npm install
-
-### Frontendnpm start
-
-- **React 18** with TypeScript```
-
-- **Material-UI (MUI)** for UI components
-
-- **React Router** for navigation## 📚 Services
-
-- **Axios** for API communication
-
-- **React Hook Form** with Zod validation| Service | Port | Purpose |
-
-|---------|------|---------|
-
-### DevOps| Auth Service | 3001 | User authentication & authorization |
-
-- **Docker** & **Docker Compose** for containerization| University Service | 3002 | Manage university profiles |
-
-- **GitHub Actions** for CI/CD| Certificate Service | 3003 | Issue and manage certificates |
-
-- **Artillery** for load testing| Verification Service | 3004 | Verify certificate authenticity |
+- **API Documentation**: OpenAPI/Swagger- Quick certificate verification  Auth  Univ  Cert  Verification   │
 
 
 
-## Architecture## API Documentation
+### Frontend- Batch verification support  3001  3002  3003      3004       │
+
+- **React 18** with TypeScript
+
+- **Material-UI (MUI)** for UI components- Detailed verification reports                    │               │
+
+- **React Router** for navigation
+
+- **Axios** for API communication- Real-time validation              Feign Client          │
+
+- **React Hook Form** with Zod validation
+
+                    │               │
+
+### DevOps
+
+- **Docker** & **Docker Compose** for containerization### For Administrators              ┌─────┴───────────────┘
+
+- **GitHub Actions** for CI/CD
+
+- **Artillery** for load testing- System-wide monitoring and analytics              ▼
 
 
 
-```Once services are running:
+## Architecture- User management across all roles          Database
+
+
+
+```- Audit logs and compliance tracking```
 
 ┌─────────────────────────────────────────────────────────────┐
 
-│                        Frontend Layer                        │- **Auth:** http://localhost:3001/swagger-ui.html
+│                        Frontend Layer                        │- System configuration
 
-│  Student Portal │ University Portal │ Employer │ Admin      │- **University:** http://localhost:3002/swagger-ui.html
+│  Student Portal │ University Portal │ Employer │ Admin      │
 
-└────────────────────────┬────────────────────────────────────┘- **Certificate:** http://localhost:3003/swagger-ui.html
+└────────────────────────┬────────────────────────────────────┘## 🚀 Quick Start
 
-                         │- **Verification:** http://localhost:3004/swagger-ui.html
+                         │
 
-┌────────────────────────▼────────────────────────────────────┐
+┌────────────────────────▼────────────────────────────────────┐## Technology Stack
 
-│                      API Gateway                             │## 🧪 Testing with Bruno
+│                      API Gateway                             │
 
-└────────────────────────┬────────────────────────────────────┘
+└────────────────────────┬────────────────────────────────────┘### Backend Setup
 
-                         │1. **Install Bruno:** https://www.usebruno.com/
+                         │
 
-        ┌────────────────┼────────────────┬─────────────┐2. **Test workflow:**
+        ┌────────────────┼────────────────┬─────────────┐### Backend```bash
 
-        │                │                │             │   - Health checks → Create university → Issue certificate → Verify
+        │                │                │             │
 
-┌───────▼──────┐ ┌──────▼──────┐ ┌──────▼──────┐ ┌───▼────────┐
+┌───────▼──────┐ ┌──────▼──────┐ ┌──────▼──────┐ ┌───▼────────┐- **Java 17** with Spring Boot 3.3.x# Start each service in separate terminals
 
-│    Auth      │ │ University  │ │Certificate  │ │Verification│## 🤝 Team Members
+│    Auth      │ │ University  │ │Certificate  │ │Verification│
 
-│   Service    │ │  Service    │ │  Service    │ │  Service   │
+│   Service    │ │  Service    │ │  Service    │ │  Service   │- **Microservices Architecture**cd backend/auth-service && ./mvnw spring-boot:run        # Port 3001
 
-└──────┬───────┘ └──────┬──────┘ └──────┬──────┘ └─────┬──────┘- **Sachin T P** – 93102 – [@SachinTP02](https://github.com/SachinTP02)
+└──────┬───────┘ └──────┬──────┘ └──────┬──────┘ └─────┬──────┘
 
-       │                │                │               │- **Saher Mahtab** – 93103 – [@SaherMahtab](https://github.com/SaherMahtab)
+       │                │                │               │  - API Gateway (Node.js/Express)cd backend/university-service && ./mvnw spring-boot:run  # Port 3002
 
-       └────────────────┴────────────────┴───────────────┘- **R Soujanya** – 93039 – [@reddeboinasoujanya09](https://github.com/reddeboinasoujanya09)
+       └────────────────┴────────────────┴───────────────┘
 
-                         │- **Sanka Deekshitha** – 93043 – [@deekshitha-77](https://github.com/deekshitha-77)
+                         │  - Authentication Service (Spring Security + JWT)cd backend/certificate-service && ./mvnw spring-boot:run # Port 3003
+
+                ┌────────▼─────────┐
+
+                │   PostgreSQL     │  - University Servicecd backend/verification-service && ./mvnw spring-boot:run # Port 3004
+
+                │   Databases      │
+
+                └──────────────────┘  - Certificate Service```
+
+```
+
+  - Verification Service
+
+## Getting Started
+
+- **Database**: PostgreSQL### Frontend Setup
+
+### Prerequisites
+
+- **Node.js** 16+ and npm- **Message Queue**: RabbitMQ/Kafka```bash
+
+- **Java** 17+
+
+- **Maven** 3.8+- **API Documentation**: OpenAPI/Swaggercd frontend
+
+- **Docker** and **Docker Compose**
+
+- **PostgreSQL** 14+ (if not using Docker)npm install
+
+
+
+### Installation### Frontendnpm start
+
+
+
+1. **Clone the repository**- **React 18** with TypeScript```
+
+   ```bash
+
+   git clone https://github.com/spotananthu/StudentCertificateManagement.git- **Material-UI (MUI)** for UI components
+
+   cd StudentCertificateManagement
+
+   ```- **React Router** for navigation## 📚 Services
+
+
+
+2. **Set up environment variables**- **Axios** for API communication
+
+   ```bash
+
+   cp environment.example .env- **React Hook Form** with Zod validation| Service | Port | Purpose |
+
+   # Edit .env with your configuration
+
+   ```|---------|------|---------|
+
+
+
+3. **Using Docker (Recommended)**### DevOps| Auth Service | 3001 | User authentication & authorization |
+
+   ```bash
+
+   docker-compose up -d- **Docker** & **Docker Compose** for containerization| University Service | 3002 | Manage university profiles |
+
+   ```
+
+- **GitHub Actions** for CI/CD| Certificate Service | 3003 | Issue and manage certificates |
+
+4. **Manual Setup**
+
+   - **Artillery** for load testing| Verification Service | 3004 | Verify certificate authenticity |
+
+   **Backend Services:**
+
+   ```bash
+
+   # Install dependencies
+
+   cd backend/auth-service && mvn clean install## Architecture## API Documentation
+
+   cd ../university-service && mvn clean install
+
+   cd ../certificate-service && mvn clean install
+
+   cd ../verification-service && mvn clean install
+
+   ```Once services are running:
+
+   # Start services (in separate terminals)
+
+   cd backend/auth-service && mvn spring-boot:run┌─────────────────────────────────────────────────────────────┐
+
+   cd backend/university-service && mvn spring-boot:run
+
+   cd backend/certificate-service && mvn spring-boot:run│                        Frontend Layer                        │- **Auth:** http://localhost:3001/swagger-ui.html
+
+   cd backend/verification-service && mvn spring-boot:run
+
+   ```│  Student Portal │ University Portal │ Employer │ Admin      │- **University:** http://localhost:3002/swagger-ui.html
+
+   
+
+   **API Gateway:**└────────────────────────┬────────────────────────────────────┘- **Certificate:** http://localhost:3003/swagger-ui.html
+
+   ```bash
+
+   cd backend/api-gateway                         │- **Verification:** http://localhost:3004/swagger-ui.html
+
+   npm install
+
+   npm run dev┌────────────────────────▼────────────────────────────────────┐
+
+   ```
+
+   │                      API Gateway                             │## 🧪 Testing with Bruno
+
+   **Frontend Applications:**
+
+   ```bash└────────────────────────┬────────────────────────────────────┘
+
+   # Student Portal
+
+   cd frontend/student-portal && npm install && npm start                         │1. **Install Bruno:** https://www.usebruno.com/
+
+   
+
+   # University Portal        ┌────────────────┼────────────────┬─────────────┐2. **Test workflow:**
+
+   cd frontend/university-portal && npm install && npm start
+
+           │                │                │             │   - Health checks → Create university → Issue certificate → Verify
+
+   # Employer Portal
+
+   cd frontend/employer-portal && npm install && npm start┌───────▼──────┐ ┌──────▼──────┐ ┌──────▼──────┐ ┌───▼────────┐
+
+   
+
+   # Admin Dashboard│    Auth      │ │ University  │ │Certificate  │ │Verification│## 🤝 Team Members
+
+   cd frontend/admin-dashboard && npm install && npm start
+
+   ```│   Service    │ │  Service    │ │  Service    │ │  Service   │
+
+
+
+### Access the Application└──────┬───────┘ └──────┬──────┘ └──────┬──────┘ └─────┬──────┘- **Sachin T P** – 93102 – [@SachinTP02](https://github.com/SachinTP02)
+
+
+
+- **Student Portal**: http://localhost:3001       │                │                │               │- **Saher Mahtab** – 93103 – [@SaherMahtab](https://github.com/SaherMahtab)
+
+- **University Portal**: http://localhost:3002
+
+- **Employer Portal**: http://localhost:3003       └────────────────┴────────────────┴───────────────┘- **R Soujanya** – 93039 – [@reddeboinasoujanya09](https://github.com/reddeboinasoujanya09)
+
+- **Admin Dashboard**: http://localhost:3004
+
+- **API Gateway**: http://localhost:3000                         │- **Sanka Deekshitha** – 93043 – [@deekshitha-77](https://github.com/deekshitha-77)
+
+- **API Documentation**: http://localhost:8080/swagger-ui.html
 
                 ┌────────▼─────────┐- **Anantha Krishnan G** – 93049 – [@spotananthu](https://github.com/spotananthu)
 
+## Project Structure
+
                 │   PostgreSQL     │
 
-                │   Databases      │## 📄 License
+```
 
-                └──────────────────┘
+├── backend/                │   Databases      │## 📄 License
 
-```This project is licensed under the [MIT License](./LICENSE).
+│   ├── api-gateway/          # API Gateway (Node.js)
 
+│   ├── auth-service/         # Authentication Service                └──────────────────┘
 
+│   ├── university-service/   # University Management
 
-## Getting Started---
+│   ├── certificate-service/  # Certificate Operations```This project is licensed under the [MIT License](./LICENSE).
 
+│   ├── verification-service/ # Certificate Verification
 
+│   └── shared/               # Shared utilities
 
-### Prerequisites**Note:** Each service has its own detailed README in their respective directories for service-specific documentation.
+├── frontend/
 
-- **Node.js** 16+ and npm
-- **Java** 17+
-- **Maven** 3.8+
+│   ├── student-portal/       # Student interface## Getting Started---
+
+│   ├── university-portal/    # University interface
+
+│   ├── employer-portal/      # Employer interface
+
+│   └── admin-dashboard/      # Admin interface
+
+├── docs/                     # Documentation### Prerequisites**Note:** Each service has its own detailed README in their respective directories for service-specific documentation.
+
+│   └── api/                  # API specifications
+
+├── load-tests/               # Performance testing- **Node.js** 16+ and npm
+
+└── docker-compose.yml        # Container orchestration- **Java** 17+
+
+```- **Maven** 3.8+
+
 - **Docker** and **Docker Compose**
-- **PostgreSQL** 14+ (if not using Docker)
 
-### Installation
+## API Documentation- **PostgreSQL** 14+ (if not using Docker)
 
-1. **Clone the repository**
+
+
+Interactive API documentation is available via Swagger UI when the services are running:### Installation
+
+- Visit http://localhost:8080/swagger-ui.html
+
+- Or check `docs/api/openapi.yaml` for the complete API specification1. **Clone the repository**
+
    ```bash
-   git clone https://github.com/spotananthu/StudentCertificateManagement.git
+
+## Testing   git clone https://github.com/spotananthu/StudentCertificateManagement.git
+
    cd StudentCertificateManagement
-   ```
 
-2. **Set up environment variables**
-   ```bash
+### Unit Tests   ```
+
+```bash
+
+# Backend services2. **Set up environment variables**
+
+mvn test   ```bash
+
    cp environment.example .env
-   # Edit .env with your configuration
-   ```
+
+# Frontend applications   # Edit .env with your configuration
+
+npm test   ```
+
+```
 
 3. **Using Docker (Recommended)**
+
+### Load Testing   ```bash
+
+```bash   docker-compose up -d
+
+cd load-tests   ```
+
+npm install -g artillery
+
+artillery run auth-load.yaml4. **Manual Setup**
+
+artillery run certificate-load.yaml   
+
+```   **Backend Services:**
+
    ```bash
-   docker-compose up -d
+
+## Security Features   # Install dependencies
+
+   cd backend/auth-service && mvn clean install
+
+- JWT-based authentication and authorization   cd ../university-service && mvn clean install
+
+- Role-based access control (RBAC)   cd ../certificate-service && mvn clean install
+
+- Digital signatures for certificate integrity   cd ../verification-service && mvn clean install
+
+- Secure API endpoints with rate limiting   
+
+- Input validation and sanitization   # Start services (in separate terminals)
+
+- SQL injection prevention   cd backend/auth-service && mvn spring-boot:run
+
+- XSS protection   cd backend/university-service && mvn spring-boot:run
+
+   cd backend/certificate-service && mvn spring-boot:run
+
+## Database Schema   cd backend/verification-service && mvn spring-boot:run
+
    ```
 
-4. **Manual Setup**
-   
-   **Backend Services:**
-   ```bash
-   # Install dependencies
-   cd backend/auth-service && mvn clean install
-   cd ../university-service && mvn clean install
-   cd ../certificate-service && mvn clean install
-   cd ../verification-service && mvn clean install
-   
-   # Start services (in separate terminals)
-   cd backend/auth-service && mvn spring-boot:run
-   cd backend/university-service && mvn spring-boot:run
-   cd backend/certificate-service && mvn spring-boot:run
-   cd backend/verification-service && mvn spring-boot:run
-   ```
-   
-   **API Gateway:**
-   ```bash
-   cd backend/api-gateway
-   npm install
+The system uses PostgreSQL with separate databases for each microservice:   
+
+- `auth_db` - User authentication and authorization   **API Gateway:**
+
+- `university_db` - University and student data   ```bash
+
+- `certificate_db` - Certificate records and metadata   cd backend/api-gateway
+
+- `verification_db` - Verification logs and reports   npm install
+
    npm run dev
-   ```
+
+## Contributing   ```
+
    
-   **Frontend Applications:**
+
+Contributions are welcome! Please follow these steps:   **Frontend Applications:**
+
    ```bash
-   # Student Portal
-   cd frontend/student-portal && npm install && npm start
+
+1. Fork the repository   # Student Portal
+
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)   cd frontend/student-portal && npm install && npm start
+
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)   
+
+4. Push to the branch (`git push origin feature/AmazingFeature`)   # University Portal
+
+5. Open a Pull Request   cd frontend/university-portal && npm install && npm start
+
    
-   # University Portal
-   cd frontend/university-portal && npm install && npm start
-   
-   # Employer Portal
+
+## License   # Employer Portal
+
    cd frontend/employer-portal && npm install && npm start
-   
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.   
+
    # Admin Dashboard
-   cd frontend/admin-dashboard && npm install && npm start
+
+## Support   cd frontend/admin-dashboard && npm install && npm start
+
    ```
+
+For issues, questions, or contributions, please open an issue on GitHub.
 
 ### Access the Application
 
-- **Student Portal**: http://localhost:3001
-- **University Portal**: http://localhost:3002
-- **Employer Portal**: http://localhost:3003
-- **Admin Dashboard**: http://localhost:3004
-- **API Gateway**: http://localhost:3000
-- **API Documentation**: http://localhost:8080/swagger-ui.html
+## Acknowledgments
 
-## Project Structure
+- **Student Portal**: http://localhost:3001
+
+- Spring Boot community for excellent microservices framework- **University Portal**: http://localhost:3002
+
+- React and Material-UI teams for frontend tools- **Employer Portal**: http://localhost:3003
+
+- All open-source contributors whose libraries made this possible- **Admin Dashboard**: http://localhost:3004
+
+- **API Gateway**: http://localhost:3000
+
+---- **API Documentation**: http://localhost:8080/swagger-ui.html
+
+
+
+**Built using modern web technologies**## Project Structure
+
 
 ```
 ├── backend/
