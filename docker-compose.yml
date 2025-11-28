@@ -2,25 +2,6 @@
 version: '3.8'
 
 services:
-  # API Gateway
-  api-gateway:
-    build: ./backend/api-gateway
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - AUTH_SERVICE_URL=http://auth-service:3001
-      - UNIVERSITY_SERVICE_URL=http://university-service:3002
-      - CERTIFICATE_SERVICE_URL=http://certificate-service:3003
-      - VERIFICATION_SERVICE_URL=http://verification-service:3004
-    depends_on:
-      - auth-service
-      - university-service
-      - certificate-service
-      - verification-service
-    networks:
-      - cert-network
-
   # Auth Service
   auth-service:
     build: ./backend/auth-service
@@ -136,7 +117,9 @@ services:
     ports:
       - "4002:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:3000
+      - REACT_APP_AUTH_API_URL=http://localhost:3001
+      - REACT_APP_CERTIFICATE_API_URL=http://localhost:3003
+      - REACT_APP_VERIFICATION_API_URL=http://localhost:3004
     networks:
       - cert-network
 
@@ -145,7 +128,9 @@ services:
     ports:
       - "4003:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:3000
+      - REACT_APP_AUTH_API_URL=http://localhost:3001
+      - REACT_APP_CERTIFICATE_API_URL=http://localhost:3003
+      - REACT_APP_VERIFICATION_API_URL=http://localhost:3004
     networks:
       - cert-network
 
@@ -154,7 +139,21 @@ services:
     ports:
       - "4001:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:3000
+      - REACT_APP_AUTH_API_URL=http://localhost:3001
+      - REACT_APP_UNIVERSITY_API_URL=http://localhost:3002
+      - REACT_APP_CERTIFICATE_API_URL=http://localhost:3003
+      - REACT_APP_VERIFICATION_API_URL=http://localhost:3004
+    networks:
+      - cert-network
+
+  university-portal:
+    build: ./frontend/university-portal
+    ports:
+      - "4004:3000"
+    environment:
+      - REACT_APP_AUTH_API_URL=http://localhost:3001
+      - REACT_APP_UNIVERSITY_API_URL=http://localhost:3002
+      - REACT_APP_CERTIFICATE_API_URL=http://localhost:3003
     networks:
       - cert-network
 
