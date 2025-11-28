@@ -1,6 +1,8 @@
 package com.studentcert.auth.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studentcert.auth.dto.AuthResponse;
+import com.studentcert.auth.dto.EmailRequest;
 import com.studentcert.auth.dto.LoginRequest;
 import com.studentcert.auth.dto.RegisterRequest;
 import com.studentcert.auth.model.User;
@@ -11,8 +13,11 @@ import com.studentcert.auth.service.UidGenerationService;
 import com.studentcert.auth.service.UniversityServiceClient;
 import com.studentcert.auth.service.UserService;
 import jakarta.validation.Valid;
+import java.util.logging.Logger;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +40,14 @@ public class AuthController {
     
     @Autowired
     private UniversityServiceClient universityServiceClient;
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    Logger logger = Logger.getLogger(AuthController.class.getName());
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -121,7 +134,20 @@ public class AuthController {
             }
             
             String token = jwtService.generateToken(user);
-            
+
+            /* Below code enables event driven notification management with kafka
+            * Ensure you setup kafka, and it is in running state*/
+            EmailRequest emailRequest = new EmailRequest();
+            emailRequest.setTo(user.getEmail());
+            emailRequest.setSubject("Your registration to StudentCert is successful");
+            emailRequest.setBody("Dear " + user.getFullName() + ",\n\n" +
+                "Thank you for registering at StudentCert. Your unique UID is: " + uid + "\n\n" +
+                "Best regards,\nStudentCert Team");
+
+            String emailJson = objectMapper.writeValueAsString(emailRequest);
+            kafkaTemplate.send ("email_notifications", emailJson);
+            logger.info("Published registration email event to Kafka for user: " + user.getEmail());
+
             AuthResponse response = AuthResponse.builder()
                 .success(true)
                 .message("Registration successful. Your UID is: " + uid)
