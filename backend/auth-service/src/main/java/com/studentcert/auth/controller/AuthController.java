@@ -14,7 +14,6 @@ import com.studentcert.auth.service.UniversityServiceClient;
 import com.studentcert.auth.service.UserService;
 import jakarta.validation.Valid;
 import java.util.logging.Logger;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
