@@ -4,16 +4,24 @@ server:
     context-path: /api
 
 spring:
+  application:
+    name: university-service
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/university_db
-    username: postgres
-    password: password
+    url: jdbc:postgresql://localhost:5432/universitiesdb
+    username: myuser
+    password: mypassword
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 
 logging:
   level:
