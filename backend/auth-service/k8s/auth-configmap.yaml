@@ -5,7 +5,7 @@ metadata:
 data:
   # Spring Boot relaxed binding:
   # SPRING_DATASOURCE_URL -> spring.datasource.url
-  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-service:5432/studentcert_auth
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/studentcert_auth
 
   # university.service.url -> UNIVERSITY_SERVICE_URL
   UNIVERSITY_SERVICE_URL: http://university-service:8080
