@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: certificate-service
+  labels:
+    app: certificate-service
+spec:
+  type: NodePort    # handy for minikube
+  selector:
+    app: certificate-service
+  ports:
+    - name: http
+      port: 3003         # cluster port
+      targetPort: 3003   # container port
+      nodePort: 30085    # optional; can remove to auto-assign

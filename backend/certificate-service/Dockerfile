@@ -1,29 +1,19 @@
-# --- Build stage ---
-FROM maven:3.9.4-eclipse-temurin-17 as builder
-WORKDIR /workspace
+# syntax=docker/dockerfile:1
 
-# Copy pom and download dependencies (leverages Docker layer caching)
-COPY pom.xml .
-COPY src ./src
-RUN mvn -B -e -ntp clean package -DskipTests
+# ====== Stage 1: Build the application ======
+FROM maven:3.9-eclipse-temurin-21 AS build
 
-# --- Runtime stage ---
-FROM eclipse-temurin:17-jre-jammy
-ARG JAR_FILE=target/*.jar
 WORKDIR /app
+COPY pom.xml .
+RUN mvn -q -DskipTests dependency:go-offline
+COPY src ./src
+RUN mvn -q -DskipTests package
 
-# Copy jar built in previous stage
-COPY --from=builder /workspace/target/*.jar app.jar
+# ====== Stage 2: Runtime image ======
+FROM eclipse-temurin:21-jre
 
-# Create runtime user for security
-RUN addgroup --system app && adduser --system --ingroup app app
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose port (same as application.yml default)
-EXPOSE 3003
-
-# Use non-root user
-USER app
-
-ENV JAVA_OPTS=" -Xms256m -Xmx512m "
-
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
+EXPOSE 8081
+ENTRYPOINT ["java", "-jar", "app.jar"]
