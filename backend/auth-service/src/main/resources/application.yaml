@@ -4,7 +4,7 @@ server:
 spring:
   application:
     name: auth-service
-  
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/studentcert_auth
@@ -36,7 +36,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
 # JWT Configuration
 app:
   jwt:
