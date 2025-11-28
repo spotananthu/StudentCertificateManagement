@@ -36,7 +36,9 @@ spring:
           auth: true
           starttls:
             enable: true
-
+https://github:
+  com/login?return_to=https%3A%2F%2Fgithub:
+    com%2Fspotananthu%2FStudentCertificateManagement%2Fpull%2Fnew%2Ffeature%2Fkafka-impl:
 # JWT Configuration
 app:
   jwt:
