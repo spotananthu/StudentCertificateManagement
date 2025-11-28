@@ -1,5 +1,6 @@
 package com.studentcert.auth.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.studentcert.auth.dto.AuthResponse;
 import com.studentcert.auth.dto.EmailRequest;
 import com.studentcert.auth.dto.LoginRequest;
@@ -13,6 +14,7 @@ import com.studentcert.auth.service.UniversityServiceClient;
 import com.studentcert.auth.service.UserService;
 import jakarta.validation.Valid;
 import java.util.logging.Logger;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -40,7 +42,10 @@ public class AuthController {
     private UniversityServiceClient universityServiceClient;
 
     @Autowired
-    private KafkaTemplate<String, EmailRequest> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     Logger logger = Logger.getLogger(AuthController.class.getName());
 
@@ -139,7 +144,8 @@ public class AuthController {
                 "Thank you for registering at StudentCert. Your unique UID is: " + uid + "\n\n" +
                 "Best regards,\nStudentCert Team");
 
-            kafkaTemplate.send ("email_notifications", emailRequest);
+            String emailJson = objectMapper.writeValueAsString(emailRequest);
+            kafkaTemplate.send ("email_notifications", emailJson);
             logger.info("Published registration email event to Kafka for user: " + user.getEmail());
 
             AuthResponse response = AuthResponse.builder()
