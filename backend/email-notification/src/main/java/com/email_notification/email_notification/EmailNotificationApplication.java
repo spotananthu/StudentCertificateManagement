@@ -1,6 +1,7 @@
 package com.email_notification.email_notification;
 
 import com.email_notification.email_notification.dto.EmailRequest;
+import com.email_notification.email_notification.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,12 @@ import tools.jackson.databind.ObjectMapper;
 public class EmailNotificationApplication {
 
 	@Autowired
-	ObjectMapper objectMapper;
-	Logger logger = LoggerFactory.getLogger(EmailNotificationApplication.class);
+	private ObjectMapper objectMapper;
+
+	@Autowired
+	private EmailService emailService;
+
+	private Logger logger = LoggerFactory.getLogger(EmailNotificationApplication.class);
 	public static void main(String[] args) {
 		SpringApplication.run(EmailNotificationApplication.class, args);
 	}
@@ -25,9 +30,11 @@ public class EmailNotificationApplication {
 	public void sendEmail(String messageJson) {
 		try {
 			EmailRequest emailRequest = objectMapper.readValue(messageJson, EmailRequest.class);
-
 			logger.info(emailRequest.toString());
-			// Implementation for sending email
+
+			emailService.sendEmail(emailRequest.getTo(), emailRequest.getSubject(), emailRequest.getBody());
+			logger.info("EmailNotificationApplication--> Email sent to: " + emailRequest.getTo());
+
 		} catch (Exception e) {
 			logger.error("Failed to parse email JSON: " + e.getMessage());
 		}
