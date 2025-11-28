@@ -4,12 +4,12 @@ server:
 spring:
   application:
     name: auth-service
-  
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/studentcert_auth
-    username: sa
-    password: admin
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
     
   jpa:
     hibernate:
@@ -36,7 +36,9 @@ spring:
           auth: true
           starttls:
             enable: true
-
+https://github:
+  com/login?return_to=https%3A%2F%2Fgithub:
+    com%2Fspotananthu%2FStudentCertificateManagement%2Fpull%2Fnew%2Ffeature%2Fkafka-impl:
 # JWT Configuration
 app:
   jwt:
