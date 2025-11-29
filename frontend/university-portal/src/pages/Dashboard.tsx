@@ -8,54 +8,16 @@ import {
   Box,
   Avatar,
   IconButton,
-  Button,
-  Alert,
 } from '@mui/material';
 import {
   AssignmentOutlined,
-  PeopleOutlined,
   SchoolOutlined,
   VerifiedUserOutlined,
   Refresh,
   TrendingUp,
-  Add,
-  Visibility,
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 import { CertificateService } from '../services/certificateService';
 import { Certificate } from '../types';
-
-// Temporary mock data - will be replaced with real API calls
-const mockStats = {
-  totalCertificatesIssued: 1247,
-  totalStudents: 3521,
-  activeCertificates: 1198,
-  revokedCertificates: 49,
-};
-
-const mockRecentCertificates = [
-  { 
-    id: '1', 
-    studentName: 'John Doe', 
-    courseName: 'Computer Science', 
-    grade: 'A+', 
-    issueDate: '2024-11-15' 
-  },
-  { 
-    id: '2', 
-    studentName: 'Jane Smith', 
-    courseName: 'Mathematics', 
-    grade: 'A', 
-    issueDate: '2024-11-14' 
-  },
-  { 
-    id: '3', 
-    studentName: 'Mike Johnson', 
-    courseName: 'Physics', 
-    grade: 'B+', 
-    issueDate: '2024-11-13' 
-  },
-];
 
 interface StatsCardProps {
   title: string;
@@ -115,6 +77,39 @@ const StatsCard: React.FC<StatsCardProps> = ({ title, value, icon, color, subtit
 };
 
 const Dashboard: React.FC = () => {
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCertificates();
+  }, []);
+
+  const fetchCertificates = async () => {
+    try {
+      setLoading(true);
+      const data = await CertificateService.getCertificates();
+      setCertificates(data);
+    } catch (error) {
+      console.error('Failed to fetch certificates:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate stats from actual data
+  const totalCertificatesIssued = certificates.length;
+  const activeCertificates = certificates.filter(cert => cert.status === 'ACTIVE').length;
+  const revokedCertificates = certificates.filter(cert => cert.status === 'REVOKED').length;
+
+  // Get recent certificates (last 5)
+  const recentCertificates = certificates
+    .sort((a, b) => new Date(b.createdAt || b.issueDate).getTime() - new Date(a.createdAt || a.issueDate).getTime())
+    .slice(0, 5);
+
+  const handleRefresh = () => {
+    fetchCertificates();
+  };
+
   return (
     <Container maxWidth="xl">
       {/* Header */}
@@ -127,7 +122,7 @@ const Dashboard: React.FC = () => {
             Welcome back! Here's an overview of your certificate management activities.
           </Typography>
         </Box>
-        <IconButton color="primary" size="large">
+        <IconButton color="primary" size="large" onClick={handleRefresh}>
           <Refresh />
         </IconButton>
       </Box>
@@ -137,7 +132,7 @@ const Dashboard: React.FC = () => {
         <Grid item xs={12} sm={6} md={3}>
           <StatsCard
             title="Total Certificates"
-            value={mockStats.totalCertificatesIssued}
+            value={totalCertificatesIssued}
             icon={<AssignmentOutlined />}
             color="primary.main"
             subtitle="All time issued"
@@ -145,20 +140,20 @@ const Dashboard: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatsCard
-            title="Total Students"
-            value={mockStats.totalStudents}
-            icon={<PeopleOutlined />}
-            color="secondary.main"
-            subtitle="Enrolled students"
+            title="Active Certificates"
+            value={activeCertificates}
+            icon={<SchoolOutlined />}
+            color="success.main"
+            subtitle="Currently valid"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <StatsCard
-            title="Active Certificates"
-            value={mockStats.activeCertificates}
-            icon={<SchoolOutlined />}
-            color="success.main"
-            subtitle="Currently valid"
+            title="Revoked Certificates"
+            value={revokedCertificates}
+            icon={<VerifiedUserOutlined />}
+            color="error.main"
+            subtitle="Revoked certificates"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -174,7 +169,7 @@ const Dashboard: React.FC = () => {
 
       {/* Recent Activity */}
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12}>
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -185,108 +180,44 @@ const Dashboard: React.FC = () => {
               </Box>
               
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {mockRecentCertificates.map((cert) => (
-                  <Box
-                    key={cert.id}
-                    sx={{
-                      p: 2,
-                      border: '1px solid #e5e7eb',
-                      borderRadius: 2,
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      '&:hover': {
-                        bgcolor: 'rgba(25, 118, 210, 0.04)',
-                      },
-                    }}
-                  >
-                    <Box>
-                      <Typography variant="subtitle1" fontWeight="medium">
-                        {cert.studentName}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {cert.courseName}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ textAlign: 'right' }}>
-                      <Typography variant="subtitle2" color="success.main">
-                        Grade: {cert.grade}
-                      </Typography>
+                {loading ? (
+                  <Typography variant="body2" color="text.secondary">
+                    Loading certificates...
+                  </Typography>
+                ) : recentCertificates.length === 0 ? (
+                  <Typography variant="body2" color="text.secondary">
+                    No certificates issued yet
+                  </Typography>
+                ) : (
+                  recentCertificates.map((cert) => (
+                    <Box
+                      key={cert.certificateId}
+                      sx={{
+                        p: 2,
+                        border: '1px solid #e5e7eb',
+                        borderRadius: 2,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        '&:hover': {
+                          bgcolor: 'rgba(25, 118, 210, 0.04)',
+                        },
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="subtitle2" fontWeight="medium">
+                          {cert.studentName}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {cert.courseName} • Grade: {cert.grade}
+                        </Typography>
+                      </Box>
                       <Typography variant="caption" color="text.secondary">
-                        {new Date(cert.issueDate).toLocaleDateString()}
+                        {new Date(cert.createdAt || cert.issueDate).toLocaleDateString()}
                       </Typography>
                     </Box>
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" component="h2" gutterBottom>
-                Quick Actions
-              </Typography>
-              
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-                <Box
-                  sx={{
-                    p: 2,
-                    border: '1px solid #e5e7eb',
-                    borderRadius: 2,
-                    cursor: 'pointer',
-                    '&:hover': {
-                      bgcolor: 'rgba(25, 118, 210, 0.04)',
-                    },
-                  }}
-                >
-                  <Typography variant="subtitle2" fontWeight="medium">
-                    Issue New Certificate
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Create and issue a new certificate
-                  </Typography>
-                </Box>
-                
-                <Box
-                  sx={{
-                    p: 2,
-                    border: '1px solid #e5e7eb',
-                    borderRadius: 2,
-                    cursor: 'pointer',
-                    '&:hover': {
-                      bgcolor: 'rgba(25, 118, 210, 0.04)',
-                    },
-                  }}
-                >
-                  <Typography variant="subtitle2" fontWeight="medium">
-                    Manage Students
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    View and manage student records
-                  </Typography>
-                </Box>
-                
-                <Box
-                  sx={{
-                    p: 2,
-                    border: '1px solid #e5e7eb',
-                    borderRadius: 2,
-                    cursor: 'pointer',
-                    '&:hover': {
-                      bgcolor: 'rgba(25, 118, 210, 0.04)',
-                    },
-                  }}
-                >
-                  <Typography variant="subtitle2" fontWeight="medium">
-                    View All Certificates
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    Browse issued certificates
-                  </Typography>
-                </Box>
+                  ))
+                )}
               </Box>
             </CardContent>
           </Card>

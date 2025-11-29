@@ -36,6 +36,14 @@ interface University {
   email: string;
 }
 
+// API response interface
+interface UniversityApiResponse {
+  universityId: string;
+  universityName: string;
+  email: string;
+  verified: boolean;
+}
+
 export const Signup: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -58,8 +66,14 @@ export const Signup: React.FC = () => {
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
-        const response = await axios.get<University[]>('http://localhost:8081/api/users/universities');
-        setUniversities(response.data);
+        const response = await axios.get<UniversityApiResponse[]>('http://localhost:9090/universities');
+        // Transform API response to match expected interface
+        const transformedUniversities: University[] = response.data.map(uni => ({
+          uid: uni.universityId,
+          name: uni.universityName,
+          email: uni.email
+        }));
+        setUniversities(transformedUniversities);
       } catch (err) {
         console.error('Failed to fetch universities:', err);
         setError('Failed to load universities. Please try again later.');

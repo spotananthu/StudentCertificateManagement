@@ -91,8 +91,9 @@ export interface SystemHealth {
     university: 'healthy' | 'unhealthy';
     certificate: 'healthy' | 'unhealthy';
     verification: 'healthy' | 'unhealthy';
-    file: 'healthy' | 'unhealthy';
     notification: 'healthy' | 'unhealthy';
+    gateway: 'healthy' | 'unhealthy';
+    discovery: 'healthy' | 'unhealthy';
   };
   uptime: string;
   lastChecked: string;

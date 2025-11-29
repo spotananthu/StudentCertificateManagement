@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const UNIVERSITY_API_URL = 'http://localhost:3002/api/universities';
+const UNIVERSITY_API_URL = 'http://localhost:9090/universities';
 
 export interface University {
   universityId: string;
