@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { VerificationResponse, BulkVerificationRequest, BulkVerificationResponse } from '../types';
 
-const VERIFICATION_API_URL = 'http://localhost:3004'; // Verification service port
+const VERIFICATION_API_URL = 'http://localhost:9090'; // API Gateway port
 
 export const VerificationService = {
   async verifyCertificate(certificateNumber: string): Promise<VerificationResponse> {
     try {
       console.log('Verifying certificate:', certificateNumber);
       const response = await axios.get(
-        `${VERIFICATION_API_URL}/api/verify/${certificateNumber}`
+        `${VERIFICATION_API_URL}/verify/${certificateNumber}`
       );
       
       console.log('Full verification response:', JSON.stringify(response.data, null, 2));
@@ -66,7 +66,7 @@ export const VerificationService = {
     try {
       const payload: BulkVerificationRequest = { certificateNumbers };
       const response = await axios.post<BulkVerificationResponse>(
-        `${VERIFICATION_API_URL}/api/verify/bulk`,
+        `${VERIFICATION_API_URL}/verify/bulk`,
         payload
       );
       return response.data;
@@ -76,7 +76,7 @@ export const VerificationService = {
   },
 
   getVerificationUrl(certificateNumber: string): string {
-    return `${VERIFICATION_API_URL}/api/verify/${certificateNumber}`;
+    return `${VERIFICATION_API_URL}/verify/${certificateNumber}`;
   },
 };
 

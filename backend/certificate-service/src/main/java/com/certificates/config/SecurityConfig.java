@@ -18,7 +18,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
             http.csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults()) // Enable CORS
+                .cors(cors -> cors.disable()) // Explicitly disable CORS - API Gateway handles it
                 .authorizeHttpRequests(auth -> auth
 //                    .requestMatchers("/api/certificates/upload").hasAnyRole("ADMIN", "UNIVERSITY")
 //                    .requestMatchers("/api/certificates/**").authenticated()

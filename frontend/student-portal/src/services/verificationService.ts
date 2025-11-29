@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Verification service runs on port 3004
-const VERIFICATION_API_BASE_URL = process.env.REACT_APP_VERIFICATION_API_BASE_URL || 'http://localhost:3004';
+const VERIFICATION_API_BASE_URL = process.env.REACT_APP_VERIFICATION_API_BASE_URL || 'http://localhost:9090';
 
 // Verification Types
 export interface VerificationRequest {
@@ -64,7 +64,7 @@ export interface BulkVerificationResponse {
 
 // Create verification API instance
 const verificationApi = axios.create({
-  baseURL: `${VERIFICATION_API_BASE_URL}/api`,
+  baseURL: VERIFICATION_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -79,7 +79,7 @@ verificationApi.interceptors.response.use(
     
     // Handle network errors
     if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-      error.message = 'Unable to connect to verification service. Please ensure the verification service is running on http://localhost:3004';
+      error.message = 'Unable to connect to verification service. Please ensure the verification service is running on http://localhost:9090';
     } else if (error.code === 'ECONNABORTED') {
       error.message = 'Verification request timeout. Please try again.';
     } else if (error.response?.status === 404) {

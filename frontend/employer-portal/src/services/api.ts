@@ -3,16 +3,19 @@ import axios from 'axios';
 // Get token for requests
 const getToken = () => localStorage.getItem('employer_token');
 
-// Create axios instance for auth service
-const authApi = axios.create({
-  baseURL: 'http://localhost:8081', // Auth service port
+// API Gateway URL - All requests will go through the gateway
+const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
+
+// Create main API instance for all endpoints (routes through API Gateway)
+const api = axios.create({
+  baseURL: API_GATEWAY_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 // Add token to requests
-authApi.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
   const token = getToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -21,7 +24,7 @@ authApi.interceptors.request.use((config) => {
 });
 
 // Handle response errors
-authApi.interceptors.response.use(
+api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
@@ -34,5 +37,5 @@ authApi.interceptors.response.use(
   }
 );
 
-export { authApi };
-export default authApi;
+export { api };
+export default api;
