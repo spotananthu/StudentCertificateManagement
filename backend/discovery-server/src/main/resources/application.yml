@@ -9,5 +9,7 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+  instance:
+    hostname: discovery-service
   server:
     eviction-interval-timer-in-ms: 60000

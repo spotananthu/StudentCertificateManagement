@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: discovery-config
+data:
+  EUREKA_INSTANCE_HOSTNAME: "discovery-service"
+  SPRING_APPLICATION_NAME: "discovery-server"
