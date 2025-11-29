@@ -16,8 +16,6 @@ import {
   People,
   School,
   Assignment,
-  VerifiedUser,
-  MonitorHeart,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -61,17 +59,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ open, onClose }) => {
       title: 'Certificates',
       path: '/certificates',
       icon: <Assignment />,
-    },
-    {
-      title: 'Verifications',
-      path: '/verifications',
-      icon: <VerifiedUser />,
-      divider: true,
-    },
-    {
-      title: 'System Health',
-      path: '/health',
-      icon: <MonitorHeart />,
     },
   ];
 

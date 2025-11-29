@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './components/Layout';
-import { Dashboard, UserManagement, Login, UniversityManagement } from './pages';
+import { Dashboard, UserManagement, Login, UniversityManagement, CertificateManagement } from './pages';
 import { authService } from './services';
 
 const theme = createTheme({
@@ -99,38 +99,7 @@ const App: React.FC = () => {
             element={
               <ProtectedRoute>
                 <Layout title="Certificate Management">
-                  <div style={{ padding: 32, textAlign: 'center' }}>
-                    <h2>Certificate Management</h2>
-                    <p>Coming soon...</p>
-                  </div>
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/verifications"
-            element={
-              <ProtectedRoute>
-                <Layout title="Verification Management">
-                  <div style={{ padding: 32, textAlign: 'center' }}>
-                    <h2>Verification Management</h2>
-                    <p>Coming soon...</p>
-                  </div>
-                </Layout>
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/health"
-            element={
-              <ProtectedRoute>
-                <Layout title="System Health">
-                  <div style={{ padding: 32, textAlign: 'center' }}>
-                    <h2>System Health</h2>
-                    <p>Coming soon...</p>
-                  </div>
+                  <CertificateManagement />
                 </Layout>
               </ProtectedRoute>
             }

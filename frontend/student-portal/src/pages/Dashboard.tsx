@@ -7,14 +7,12 @@ import {
   Box,
   Chip,
   Avatar,
-  Divider,
   Button,
 } from '@mui/material';
 import { 
   ArticleOutlined, 
   VerifiedOutlined, 
   DownloadOutlined,
-  TrendingUpOutlined,
   ViewList,
 } from '@mui/icons-material';
 import { useCertificates } from '../hooks/useCertificates';
@@ -243,96 +241,6 @@ const Dashboard: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
-
-      {/* Recent Certificates Section */}
-      <Card sx={{ 
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        border: '1px solid #e2e8f0',
-        borderRadius: 3,
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-      }}>
-        <CardContent sx={{ p: 6 }}>
-          <Box sx={{ mb: 4 }}>
-            <Typography 
-              variant="h4" 
-              className="academic-heading"
-              sx={{ 
-                mb: 2,
-                fontSize: '1.875rem'
-              }}
-            >
-              Recent Certificates
-            </Typography>
-            <Typography 
-              variant="body1" 
-              sx={{ 
-                fontSize: '1rem'
-              }}
-            >
-              Your latest academic achievements and certifications
-            </Typography>
-          </Box>
-          
-          <Divider sx={{ mb: 4 }} />
-          
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-            <Chip 
-              label="Computer Science Degree - 2023" 
-              sx={{
-                backgroundColor: '#dbeafe',
-                color: '#2563eb',
-                fontWeight: 500,
-                fontSize: '0.875rem',
-                height: 40,
-                border: '1px solid #bfdbfe',
-                '& .MuiChip-label': {
-                  px: 3
-                },
-                '&:hover': {
-                  backgroundColor: '#bfdbfe',
-                  transform: 'scale(1.02)',
-                }
-              }}
-            />
-            <Chip 
-              label="Project Management Certificate - 2023" 
-              sx={{
-                backgroundColor: '#ccfbf1',
-                color: '#0d9488',
-                fontWeight: 500,
-                fontSize: '0.875rem',
-                height: 40,
-                border: '1px solid #99f6e4',
-                '& .MuiChip-label': {
-                  px: 3
-                },
-                '&:hover': {
-                  backgroundColor: '#99f6e4',
-                  transform: 'scale(1.02)',
-                }
-              }}
-            />
-            <Chip 
-              label="Data Analysis Course - 2022" 
-              sx={{
-                backgroundColor: '#fef2f2',
-                color: '#dc2626',
-                fontWeight: 500,
-                fontSize: '0.875rem',
-                height: 40,
-                border: '1px solid #fecaca',
-                '& .MuiChip-label': {
-                  px: 3
-                },
-                '&:hover': {
-                  backgroundColor: '#fecaca',
-                  transform: 'scale(1.02)',
-                }
-              }}
-            />
-          </Box>
-        </CardContent>
-      </Card>
 
       {/* Recent Certificates Section */}
       {recentCertificates.length > 0 && (

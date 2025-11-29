@@ -97,34 +97,47 @@ export const SystemHealthCard: React.FC<SystemHealthCardProps> = ({
           />
         </Box>
 
-        <Typography variant="subtitle2" gutterBottom>
+                <Typography variant="subtitle2" gutterBottom>
           Service Status
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {Object.entries(health.services).map(([service, status]) => (
-            <Box
-              key={service}
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                p: 1,
-                borderRadius: 1,
-                bgcolor: 'grey.50',
-              }}
-            >
-              <Typography variant="body2" sx={{ textTransform: 'capitalize' }}>
-                {service} Service
-              </Typography>
-              <Chip
-                icon={getStatusIcon(status)}
-                label={status}
-                size="small"
-                color={getStatusColor(status) as any}
-                variant="outlined"
-              />
-            </Box>
-          ))}
+          {Object.entries(health.services).map(([service, status]) => {
+            // Map service keys to user-friendly names
+            const serviceNames: Record<string, string> = {
+              gateway: 'API Gateway',
+              auth: 'Authentication Service',
+              university: 'University Service',
+              certificate: 'Certificate Service',
+              verification: 'Verification Service',
+              notification: 'Email Notification',
+              discovery: 'Discovery Server'
+            };
+            
+            return (
+              <Box
+                key={service}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  p: 1,
+                  borderRadius: 1,
+                  bgcolor: 'grey.50',
+                }}
+              >
+                <Typography variant="body2">
+                  {serviceNames[service] || service}
+                </Typography>
+                <Chip
+                  icon={getStatusIcon(status)}
+                  label={status}
+                  size="small"
+                  color={getStatusColor(status) as any}
+                  variant="outlined"
+                />
+              </Box>
+            );
+          })}
         </Box>
 
         <Box sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: 'grey.200' }}>
