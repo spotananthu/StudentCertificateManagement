@@ -14,7 +14,6 @@ import com.studentcert.auth.service.UniversityServiceClient;
 import com.studentcert.auth.service.UserService;
 import jakarta.validation.Valid;
 import java.util.logging.Logger;
-import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -136,16 +135,21 @@ public class AuthController {
 
             /* Below code enables event driven notification management with kafka
             * Ensure you setup kafka, and it is in running state*/
-            EmailRequest emailRequest = new EmailRequest();
-            emailRequest.setTo(user.getEmail());
-            emailRequest.setSubject("Your registration to StudentCert is successful");
-            emailRequest.setBody("Dear " + user.getFullName() + ",\n\n" +
-                "Thank you for registering at StudentCert. Your unique UID is: " + uid + "\n\n" +
-                "Best regards,\nStudentCert Team");
+            try {
+                EmailRequest emailRequest = new EmailRequest();
+                emailRequest.setTo(user.getEmail());
+                emailRequest.setSubject("Your registration to StudentCert is successful");
+                emailRequest.setBody("Dear " + user.getFullName() + ",\n\n" +
+                        "Thank you for registering at StudentCert. Your unique UID is: " + uid + "\n\n" +
+                        "Best regards,\nStudentCert Team");
 
-            String emailJson = objectMapper.writeValueAsString(emailRequest);
-            kafkaTemplate.send ("email_notifications", emailJson);
-            logger.info("Published registration email event to Kafka for user: " + user.getEmail());
+                String emailJson = objectMapper.writeValueAsString(emailRequest);
+                kafkaTemplate.send("email_notifications", emailJson);
+                logger.info("Published registration email event to Kafka for user: " + user.getEmail());
+            } catch (Exception e) {
+                // Log Kafka failure but do not fail registration
+                logger.warning("Failed to publish email event to Kafka for user: " + user.getEmail());
+            }
 
             AuthResponse response = AuthResponse.builder()
                 .success(true)

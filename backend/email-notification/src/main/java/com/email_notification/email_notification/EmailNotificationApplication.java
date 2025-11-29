@@ -40,4 +40,18 @@ public class EmailNotificationApplication {
 		}
 	}
 
+	@KafkaListener(topics = "certificate_notifications", groupId = "cert_notification_group")
+	public void sendEmailAttachment(String messageJson) {
+		try {
+			EmailRequest emailRequest = objectMapper.readValue(messageJson, EmailRequest.class);
+			logger.info(emailRequest.toString());
+
+			emailService.sendEmail(emailRequest.getTo(), emailRequest.getSubject(), emailRequest.getBody());
+			logger.info("EmailNotificationApplication--> Email sent to: " + emailRequest.getTo());
+
+		} catch (Exception e) {
+			logger.error("Failed to parse email JSON: " + e.getMessage());
+		}
+	}
+
 }
