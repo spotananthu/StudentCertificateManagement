@@ -1,21 +1,20 @@
 import axios from 'axios';
 
-// Auth service runs on port 8081, other services on port 3000
-const AUTH_API_BASE_URL = process.env.REACT_APP_AUTH_API_BASE_URL || 'http://localhost:8081';
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000';
+// API Gateway URL - All requests will go through the gateway
+const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
 
-// Create main API instance for non-auth endpoints
+// Create main API instance for all endpoints (routes through API Gateway)
 const api = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  baseURL: API_GATEWAY_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000, // 10 seconds timeout
 });
 
-// Create auth API instance for authentication endpoints
+// Create auth API instance - also routes through API Gateway
 export const authApi = axios.create({
-  baseURL: `${AUTH_API_BASE_URL}/api`,
+  baseURL: API_GATEWAY_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -64,7 +63,7 @@ authApi.interceptors.response.use(
   (error) => {
     // Handle network errors
     if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-      error.message = 'Unable to connect to auth service. Please ensure the auth service is running on http://localhost:8081';
+      error.message = 'Unable to connect to auth service through API Gateway. Please check your connection.';
     } else if (error.code === 'ECONNABORTED') {
       error.message = 'Request timeout. Please try again.';
     } else if (error.response?.status === 401) {

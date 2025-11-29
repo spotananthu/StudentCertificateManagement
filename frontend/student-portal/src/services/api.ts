@@ -1,8 +1,11 @@
 import axios from 'axios';
 
-// Create axios instance with base configuration for student portal
-export const authApi = axios.create({
-  baseURL: 'http://localhost:8081/api',
+// API Gateway URL - All requests will go through the gateway
+const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
+
+// Create main API instance for all endpoints (routes through API Gateway)
+const api = axios.create({
+  baseURL: API_GATEWAY_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,7 +13,7 @@ export const authApi = axios.create({
 });
 
 // Add request interceptor to include auth token
-authApi.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('student_token');
     if (token) {
@@ -24,7 +27,7 @@ authApi.interceptors.request.use(
 );
 
 // Add response interceptor to handle auth errors
-authApi.interceptors.response.use(
+api.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -40,4 +43,4 @@ authApi.interceptors.response.use(
   }
 );
 
-export default authApi;
+export default api;

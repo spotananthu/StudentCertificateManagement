@@ -1,11 +1,11 @@
-import { authApi } from './api';
+import authApi from './api';
 import { LoginRequest, SignupRequest, AuthUser, ApiResponse } from '../types';
 
 export const authService = {
   async login(credentials: LoginRequest): Promise<AuthUser> {
     try {
       console.log('Attempting login with credentials:', { email: credentials.email });
-      const response = await authApi.post<ApiResponse<AuthUser>>('/api/auth/login', credentials);
+      const response = await authApi.post<ApiResponse<AuthUser>>('/auth/login', credentials);
       
       console.log('Login response:', response.data);
       
@@ -32,7 +32,7 @@ export const authService = {
     } catch (error: any) {
       // Handle specific error cases
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
-        throw new Error('Cannot connect to auth service. Please ensure the auth service is running on http://localhost:8081');
+        throw new Error('Cannot connect to auth service through API Gateway. Please check your connection.');
       } else if (error.response?.status === 401) {
         throw new Error('Invalid email or password.');
       } else if (error.response?.status === 403) {
@@ -67,7 +67,7 @@ export const authService = {
 
       console.log('Sending signup request with payload:', signupPayload);
 
-      const response = await authApi.post<ApiResponse<AuthUser>>('/api/auth/register', signupPayload);
+      const response = await authApi.post<ApiResponse<AuthUser>>('/auth/register', signupPayload);
       
       console.log('Signup response:', response.data);
       
@@ -86,7 +86,7 @@ export const authService = {
       
       // Handle specific error cases
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
-        throw new Error('Cannot connect to auth service. Please ensure the auth service is running on http://localhost:8081');
+        throw new Error('Cannot connect to auth service through API Gateway. Please check your connection.');
       } else if (error.response?.status === 400) {
         throw new Error(error.response.data.message || 'Invalid registration data.');
       } else if (error.response?.status === 403) {
@@ -103,7 +103,7 @@ export const authService = {
 
   async logout(): Promise<void> {
     try {
-      await authApi.post('/api/auth/logout');
+      await authApi.post('/auth/logout');
     } catch (error) {
       // Continue with logout even if API call fails
     } finally {
@@ -114,7 +114,7 @@ export const authService = {
 
   async getCurrentUser(): Promise<AuthUser | null> {
     try {
-      const response = await authApi.get<ApiResponse<AuthUser>>('/api/auth/me');
+      const response = await authApi.get<ApiResponse<AuthUser>>('/auth/me');
       
       if (!response.data.success) {
         throw new Error('Failed to get user info');

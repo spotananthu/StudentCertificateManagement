@@ -2,12 +2,11 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import { Certificate, CertificateIssueRequest, CertificateUpdateRequest, CertificateRevocationRequest, FileUploadResponse } from '../types/certificate';
 
 // API Base URL - should be configured via environment variables
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3003/api';
-const CERTIFICATE_API_URL = `${API_BASE_URL}/certificates`;
+const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
 
 // Create axios instance with common configuration
 const apiClient = axios.create({
-  baseURL: CERTIFICATE_API_URL,
+  baseURL: API_GATEWAY_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -49,7 +48,7 @@ export class CertificateService {
   static async getCertificates(status?: string): Promise<Certificate[]> {
     try {
       const params = status ? { status } : {};
-      const response: AxiosResponse<Certificate[]> = await apiClient.get('', { params });
+      const response: AxiosResponse<Certificate[]> = await apiClient.get('/certificates', { params });
       return response.data;
     } catch (error) {
       console.error('Error fetching certificates:', error);
@@ -62,7 +61,7 @@ export class CertificateService {
    */
   static async getCertificateById(id: string): Promise<Certificate> {
     try {
-      const response: AxiosResponse<Certificate> = await apiClient.get(`/${id}`);
+      const response: AxiosResponse<Certificate> = await apiClient.get(`/certificates/${id}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching certificate:', error);
@@ -75,7 +74,7 @@ export class CertificateService {
    */
   static async issueCertificate(request: CertificateIssueRequest): Promise<Certificate> {
     try {
-      const response: AxiosResponse<Certificate> = await apiClient.post('/', request);
+      const response: AxiosResponse<Certificate> = await apiClient.post('/certificates', request);
       return response.data;
     } catch (error) {
       console.error('Error issuing certificate:', error);
@@ -88,7 +87,7 @@ export class CertificateService {
    */
   static async updateCertificate(id: string, request: CertificateUpdateRequest): Promise<Certificate> {
     try {
-      const response: AxiosResponse<Certificate> = await apiClient.put(`/${id}`, request);
+      const response: AxiosResponse<Certificate> = await apiClient.put(`/certificates/${id}`, request);
       return response.data;
     } catch (error) {
       console.error('Error updating certificate:', error);
@@ -101,7 +100,7 @@ export class CertificateService {
    */
   static async revokeCertificate(request: CertificateRevocationRequest): Promise<string> {
     try {
-      const response: AxiosResponse<string> = await apiClient.post('/revoke', request);
+      const response: AxiosResponse<string> = await apiClient.post('/certificates/revoke', request);
       return response.data;
     } catch (error) {
       console.error('Error revoking certificate:', error);
@@ -114,7 +113,7 @@ export class CertificateService {
    */
   static async downloadCertificatePdf(certificateId: string): Promise<Blob> {
     try {
-      const response: AxiosResponse<Blob> = await apiClient.get(`/${certificateId}/pdf`, {
+      const response: AxiosResponse<Blob> = await apiClient.get(`/certificates/${certificateId}/pdf`, {
         responseType: 'blob',
       });
       return response.data;
@@ -133,7 +132,7 @@ export class CertificateService {
       formData.append('file', file);
       formData.append('type', type);
 
-      const response: AxiosResponse<FileUploadResponse> = await apiClient.post('/upload', formData, {
+      const response: AxiosResponse<FileUploadResponse> = await apiClient.post('/certificates/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -150,7 +149,7 @@ export class CertificateService {
    */
   static async batchIssueCertificates(certificates: CertificateIssueRequest[]): Promise<any> {
     try {
-      const response = await apiClient.post('/batch-issue', {
+      const response = await apiClient.post('/certificates/batch-issue', {
         'static/certificates': certificates
       });
       return response.data;

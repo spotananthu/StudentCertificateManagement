@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 import { Certificate, CertificateIssueRequest, CertificateUpdateRequest, CertificateRevocationRequest, FileUploadResponse } from '../types';
 
-// Create certificate service API instance
-const CERTIFICATE_API_BASE_URL = process.env.REACT_APP_CERTIFICATE_API_BASE_URL || 'http://localhost:3003';
+// Use API Gateway for certificate service calls
+const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
 
 const certificateApi = axios.create({
-  baseURL: `${CERTIFICATE_API_BASE_URL}/api`,
+  baseURL: API_GATEWAY_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -34,7 +34,7 @@ certificateApi.interceptors.response.use(
     
     // Handle network errors
     if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-      error.message = 'Unable to connect to certificate service. Please ensure the certificate service is running on http://localhost:3003';
+      error.message = 'Unable to connect to API Gateway. Please ensure the API Gateway is running on http://localhost:9090';
     } else if (error.code === 'ECONNABORTED') {
       error.message = 'Request timeout. Please try again.';
     } else if (error.response?.status === 401) {
