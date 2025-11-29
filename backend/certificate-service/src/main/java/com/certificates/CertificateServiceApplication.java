@@ -2,6 +2,7 @@ package com.certificates;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * Certificate Service - Spring Boot entry point.
@@ -11,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * - Configuration (DB URL, Auth service URL, secrets) should be provided.
  */
 @SpringBootApplication
+@EnableDiscoveryClient
 public class CertificateServiceApplication {
 
     public static void main(String[] args) {

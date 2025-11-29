@@ -20,7 +20,7 @@ public class HealthController {
 
     private final long startTime = System.currentTimeMillis();
 
-    @GetMapping("/health")
+    @GetMapping("/api/health")
     @Operation(summary = "Health check", description = "Check if the service is running")
     public ResponseEntity<Map<String, Object>> health() {
         Map<String, Object> health = new HashMap<>();

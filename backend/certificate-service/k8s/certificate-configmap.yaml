@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: certificate-service-config
+data:
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
+  DB_NAME: "certificatesdb"
+  SERVER_PORT: "3003"
+  AUTH_SERVICE_URL: http://auth-service:8081
+  JWT_EXPIRATION: "86400000"

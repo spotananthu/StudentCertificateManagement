@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certificate-service
+  labels:
+    app: certificate-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certificate-service
+  template:
+    metadata:
+      labels:
+        app: certificate-service
+    spec:
+      containers:
+        - name: certificate-service
+          image: certificate-service:latest   # local image built inside minikube
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 3003
+            
+          envFrom:
+            - configMapRef:
+                name: certificate-service-config
+            - secretRef:
+                name: certificate-service-secret
+          livenessProbe:
+            tcpSocket:
+              port: 3003
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 3003
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
