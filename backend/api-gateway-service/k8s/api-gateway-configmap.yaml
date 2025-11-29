@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-gateway-config
+data:
+  SPRING_PROFILES_ACTIVE: "default"
+  SERVER_PORT: "8080"
+  EUREKA_SERVER_URL: "http://eureka-service:8761/eureka"
