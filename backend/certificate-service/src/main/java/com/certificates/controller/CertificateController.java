@@ -73,7 +73,6 @@ public class CertificateController {
             kafkaTemplate.send("certificate_notifications", emailJson);
             logger.info("Published registration email event to Kafka for certificate service: " + req.getStudentEmail());
         } catch (Exception e) {
-            // Log Kafka failure but do not fail registration
             logger.warn("Failed to publish email event to Kafka for certificate service: " + req.getStudentEmail());
         }
 
