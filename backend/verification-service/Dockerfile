@@ -1,30 +1,19 @@
-# Stage 1: Build
-FROM maven:3.9-eclipse-temurin-17 AS builder
+# syntax=docker/dockerfile:1
+
+# ====== Stage 1: Build the application ======
+FROM maven:3.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
-
-# Copy pom.xml and download dependencies
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copy source code and build
+RUN mvn -q -DskipTests dependency:go-offline
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn -q -DskipTests package
 
-# Stage 2: Runtime
-FROM eclipse-temurin:17-jre-alpine
+# ====== Stage 2: Runtime image ======
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-# Copy jar from builder
-COPY --from=builder /app/target/verification-service-1.0.0.jar app.jar
-
-# Expose port
 EXPOSE 3004
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3004/health || exit 1
-
-# Run application
 ENTRYPOINT ["java", "-jar", "app.jar"]
