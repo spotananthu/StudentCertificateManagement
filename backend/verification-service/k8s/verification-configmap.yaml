@@ -7,5 +7,4 @@ metadata:
 data:
   CERTIFICATE_SERVICE_URL: "http://certificate-service:3003"
   UNIVERSITY_SERVICE_URL: "http://university-service:3002"
-  # If you later deploy Eureka inside k8s, you can also add (and map via env var):
-  # EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-service:8761/eureka"
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-service:8761/eureka"

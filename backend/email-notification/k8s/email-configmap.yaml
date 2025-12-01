@@ -6,3 +6,4 @@ data:
   KAFKA_BOOTSTRAP_SERVERS: "kafka-service:9092"
   MAIL_HOST: "smtp.gmail.com"
   MAIL_PORT: "587"
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: "http://discovery-service:8761/eureka"

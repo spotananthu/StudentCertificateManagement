@@ -7,7 +7,8 @@ echo "👉 Switching Docker to Minikube daemon..."
 eval $(minikube -p minikube docker-env)
 
 echo "👉 Building API-Gateway Docker image..."
-docker build -t api-gateway:latest .
+export DOCKER_BUILDKIT=1
+docker build --cache-from=api-gateway:latest -t api-gateway:1.0.0-dev .
 
 echo "👉 Applying API-Gateway Kubernetes manifests..."
 kubectl apply -f k8s/

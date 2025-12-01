@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: verification-deployment
+  name: verification-service
   labels:
     app: verification-service
 spec:
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: verification-service
-          image: verification-service:latest
+          image: verification-service:1.0.0-dev
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3004

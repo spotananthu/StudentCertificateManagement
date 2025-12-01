@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: certificate-service
-          image: certificate-service:latest   # local image built inside minikube
+          image: certificate-service:1.0.0-dev   # local image built inside minikube
           imagePullPolicy: IfNotPresent
 
           ports:
