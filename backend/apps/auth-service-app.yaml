@@ -9,6 +9,12 @@ spec:
     repoURL: https://github.com/spotananthu/StudentCertificateManagement
     targetRevision: argocd
     path: backend/auth-service/k8s
+  directory:
+    recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
