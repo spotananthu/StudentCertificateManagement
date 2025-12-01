@@ -1,0 +1,53 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: student-cert-frontend-gateway
+spec:
+  rules:
+  - host: student.localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: student-portal
+            port:
+              number: 3000
+  - host: university.localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: university-portal
+            port:
+              number: 3001
+  - host: employer.localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: employer-portal
+            port:
+              number: 3002
+  - host: admin.localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: admin-dashboard
+            port:
+              number: 3003
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: student-portal
+            port:
+              number: 3000

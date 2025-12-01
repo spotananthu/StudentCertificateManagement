@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: university-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: university-service
+  template:
+    metadata:
+      labels:
+        app: university-service
+    spec:
+      containers:
+      - name: university-service
+        image: university-service:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3002
+        env:
+        - name: SERVER_PORT
+          value: "3002"
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://postgres-university:5432/university_db
+        - name: SPRING_DATASOURCE_USERNAME
+          value: postgres
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: password
+        - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+          value: http://discovery-server:8761/eureka
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: university-service
+spec:
+  type: ClusterIP
+  selector:
+    app: university-service
+  ports:
+  - port: 3002
+    targetPort: 3002
