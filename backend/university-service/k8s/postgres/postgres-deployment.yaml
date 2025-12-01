@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: university-postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: university-postgres
   template:
     metadata:
       labels:
-        app: postgres
+        app: university-postgres
     spec:
       containers:
-        - name: postgres
+        - name: university-postgres
           image: postgres:15
           ports:
             - containerPort: 5432
           envFrom:
             - configMapRef:
-                name: postgres-config
+                name: university-postgres-config
             - secretRef:
-                name: postgres-secret
+                name: university-postgres-secret
           volumeMounts:
-            - name: postgres-storage
+            - name: university-postgres-storage
               mountPath: /var/lib/postgresql/data
               subPath: postgres
       volumes:
-        - name: postgres-storage
+        - name: university-postgres-storage
           persistentVolumeClaim:
-            claimName: postgres-pvc
+            claimName: university-postgres-pvc

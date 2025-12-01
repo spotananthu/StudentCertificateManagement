@@ -3,8 +3,9 @@ kind: ConfigMap
 metadata:
   name: university-service-config
 data:
-  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/university_db
+  SPRING_DATASOURCE_URL: jdbc:postgresql://university-postgres:5432/university_db
   SPRING_DATASOURCE_USERNAME: postgres
   SPRING_DATASOURCE_PASSWORD: password
   SPRING_JPA_HIBERNATE_DDL_AUTO: update
   SERVER_PORT: "3002"
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discovery-service:8761/eureka

@@ -5,7 +5,7 @@ metadata:
 data:
   # Spring Boot relaxed binding:
   # SPRING_DATASOURCE_URL -> spring.datasource.url
-  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/studentcert_auth
+  SPRING_DATASOURCE_URL: jdbc:postgresql://auth-postgres:5432/studentcert_auth
 
   # university.service.url -> UNIVERSITY_SERVICE_URL
   UNIVERSITY_SERVICE_URL: http://university-service:8080
@@ -15,3 +15,6 @@ data:
 
   # jwt.expiration -> JWT_EXPIRATION (in ms)
   JWT_EXPIRATION: "86400000"
+
+  # Eureka service discovery
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discovery-service:8761/eureka

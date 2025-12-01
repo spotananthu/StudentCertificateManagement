@@ -7,8 +7,8 @@ echo "👉 Switching Docker to Minikube daemon..."
 eval $(minikube -p minikube docker-env)
 
 echo "🔨 Building Discovery Server image..."
-mvn clean package -DskipTests
-docker build -t discovery-server:1.0.0 .
+export DOCKER_BUILDKIT=1
+docker build --cache-from=discovery-server:latest -t discovery-server:1.0.0-dev .
 
 echo "⚙️ Deploying ConfigMap..."
 kubectl apply -f k8s/discovery-configmap.yaml

@@ -3,9 +3,10 @@ kind: ConfigMap
 metadata:
   name: certificate-service-config
 data:
-  DB_HOST: "postgres"
+  DB_HOST: "certificate-postgres"
   DB_PORT: "5432"
   DB_NAME: "certificatesdb"
   SERVER_PORT: "3003"
   AUTH_SERVICE_URL: http://auth-service:8081
   JWT_EXPIRATION: "86400000"
+  EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discovery-service:8761/eureka

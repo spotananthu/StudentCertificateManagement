@@ -7,8 +7,8 @@ echo "👉 Switching Docker to Minikube daemon..."
 eval $(minikube -p minikube docker-env)
 
 echo "🔨 Building Email-Notification Docker image..."
-mvn clean package -DskipTests
-docker build -t email-notification:1.0.0 .
+export DOCKER_BUILDKIT=1
+docker build --cache-from=email-notification:latest -t email-notification:1.0.0-dev .
 
 echo "📦 Deploying Zookeeper..."
 kubectl apply -f k8s/zookeeper.yaml

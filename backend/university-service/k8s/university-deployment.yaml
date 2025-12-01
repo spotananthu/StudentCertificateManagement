@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: university-service
-          image: university-service:latest   # local image built inside minikube
+          image: university-service:1.0.0-dev   # local image built inside minikube
           imagePullPolicy: IfNotPresent
 
           ports:
@@ -34,7 +34,7 @@ spec:
             periodSeconds: 10
           readinessProbe:
             tcpSocket:
-              port: 3003
+              port: 3002
             initialDelaySeconds: 10
             periodSeconds: 5
           resources:

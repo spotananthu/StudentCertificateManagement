@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: studentcert
+  labels:
+    name: studentcert
+    app: student-certificate-management
+---
+# ConfigMap for shared configuration across services
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shared-config
+  namespace: studentcert
+data:
+  # Discovery service URL for all services
+  EUREKA_SERVER_URL: "http://discovery-service:8761/eureka"
+  
+  # Common timeouts and settings
+  HTTP_TIMEOUT: "30000"
+  CONNECTION_TIMEOUT: "5000"
+  
+  # Environment
+  ENVIRONMENT: "kubernetes"

@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: certificate-postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: certificate-postgres
   template:
     metadata:
       labels:
-        app: postgres
+        app: certificate-postgres
     spec:
       containers:
-        - name: postgres
+        - name: certificate-postgres
           image: postgres:15
           ports:
             - containerPort: 5432
           envFrom:
             - configMapRef:
-                name: postgres-config
+                name: certificate-postgres-config
             - secretRef:
-                name: postgres-secret
+                name: certificate-postgres-secret
           volumeMounts:
-            - name: postgres-storage
+            - name: certificate-postgres-storage
               mountPath: /var/lib/postgresql/data
               subPath: postgres
       volumes:
-        - name: postgres-storage
+        - name: certificate-postgres-storage
           persistentVolumeClaim:
-            claimName: postgres-pvc
+            claimName: certificate-postgres-pvc

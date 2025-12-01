@@ -7,7 +7,8 @@ echo "👉 Switching Docker to Minikube daemon..."
 eval $(minikube -p minikube docker-env)
 
 echo "👉 Building Verification-Service Docker image..."
-docker build -t verification-service:latest .
+export DOCKER_BUILDKIT=1
+docker build --cache-from=verification-service:latest -t verification-service:1.0.0-dev .
 
 echo "👉 Applying Kubernetes manifests..."
 kubectl apply -f k8s/
