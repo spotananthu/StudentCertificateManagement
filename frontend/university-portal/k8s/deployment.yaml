@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: university-dashboard
+  namespace: default
   labels:
     app: university-dashboard
 spec:
@@ -17,6 +18,6 @@ spec:
       containers:
         - name: university-dashboard
           image: sachintp/university-dashboard:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
-          imagePullPolicy: Always

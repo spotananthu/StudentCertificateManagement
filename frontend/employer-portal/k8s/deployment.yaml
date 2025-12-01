@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: employer-dashboard
+  namespace: default
   labels:
     app: employer-dashboard
 spec:
@@ -17,6 +18,6 @@ spec:
       containers:
         - name: employer-dashboard
           image: sachintp/employer-dashboard:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
-          imagePullPolicy: Always

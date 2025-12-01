@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: admin-dashboard
+  namespace: default
   labels:
     app: admin-dashboard
 spec:
@@ -17,6 +18,6 @@ spec:
       containers:
         - name: admin-dashboard
           image: sachintp/admin-dashboard:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
-          imagePullPolicy: Always
