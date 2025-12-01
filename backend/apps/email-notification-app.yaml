@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: email-notification
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/spotananthu/StudentCertificateManagement
+    targetRevision: argocd
+    path: backend/email-notification/k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
