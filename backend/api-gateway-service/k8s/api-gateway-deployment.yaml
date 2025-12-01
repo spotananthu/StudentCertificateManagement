@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: sachintp/api-gateway:1.0.1
+          image: sachintp/certificate-service:latest 
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
