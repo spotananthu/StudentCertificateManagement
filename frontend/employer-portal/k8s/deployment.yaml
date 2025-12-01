@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employer-dashboard
+  labels:
+    app: employer-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employer-dashboard
+  template:
+    metadata:
+      labels:
+        app: employer-dashboard
+    spec:
+      containers:
+        - name: employer-dashboard
+          image: sachintp/employer-dashboard:latest
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-dashboard
+  labels:
+    app: student-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: student-dashboard
+  template:
+    metadata:
+      labels:
+        app: student-dashboard
+    spec:
+      containers:
+        - name: stuednt-dashboard
+          image: sachintp/student-dashboard:latest
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always

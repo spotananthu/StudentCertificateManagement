@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: university-dashboard
+  labels:
+    app: university-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: university-dashboard
+  template:
+    metadata:
+      labels:
+        app: university-dashboard
+    spec:
+      containers:
+        - name: university-dashboard
+          image: sachintp/university-dashboard:latest
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always

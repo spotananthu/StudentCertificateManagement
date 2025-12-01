@@ -109,6 +109,41 @@ spring:
           filters:
             - RewritePath=/verify(?<segment>/.*)?$, /api/verify${segment}
 
+                # ===== FRONTEND ROUTING =====
+
+        # Admin Dashboard UI
+        - id: admin-dashboard-ui
+          uri: http://admin-dashboard
+          predicates:
+            - Path=/ui/admin/**, /admin/**
+          filters:
+            - StripPrefix=1
+
+        # Student Portal UI
+        - id: student-portal-ui
+          uri: http://student-portal
+          predicates:
+            - Path=/ui/student/**, /student/**
+          filters:
+            - StripPrefix=1
+
+        # Employer Portal UI
+        - id: employer-portal-ui
+          uri: http://employer-portal
+          predicates:
+            - Path=/ui/employer/**, /employer/**
+          filters:
+            - StripPrefix=1
+
+        # University Portal UI
+        - id: university-portal-ui
+          uri: http://university-portal
+          predicates:
+            - Path=/ui/university/**, /university/**
+          filters:
+            - StripPrefix=1
+
+
 eureka:
   client:
     service-url:
