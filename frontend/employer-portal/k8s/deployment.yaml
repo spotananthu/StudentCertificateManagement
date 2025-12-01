@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: employer-dashboard
-          image: sachintp/employer-dashboard:latest
+          image: sachintp/employer-portal:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80

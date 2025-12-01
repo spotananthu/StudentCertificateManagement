@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: student-dashboard
-          image: sachintp/student-dashboard:latest
+          image: sachintp/student-portal:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
