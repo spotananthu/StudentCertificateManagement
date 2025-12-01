@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: verification-service
-          image: verification-service:1.0.0-dev
-          imagePullPolicy: IfNotPresent
+          image: sachintp/verification-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3004
           envFrom:

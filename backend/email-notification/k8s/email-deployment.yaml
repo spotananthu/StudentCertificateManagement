@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: email-notification
-          image: email-notification:1.0.0-dev
-          imagePullPolicy: IfNotPresent
+          image: sachintp/email-notification:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:

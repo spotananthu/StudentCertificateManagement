@@ -16,8 +16,8 @@ spec:
     spec:
       containers:
         - name: university-service
-          image: university-service:1.0.0-dev   # local image built inside minikube
-          imagePullPolicy: IfNotPresent
+          image: sachintp/university-service:latest 
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 3002

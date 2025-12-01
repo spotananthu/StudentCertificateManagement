@@ -18,8 +18,8 @@ spec:
         - name: auth-service
           # Change this if you push to a registry:
           # e.g. my-dockerhub-user/auth-service:1.0.0
-          image: auth-service:1.0.0-dev
-          imagePullPolicy: IfNotPresent
+          image: sachintp/auth-service:latest
+          imagePullPolicy: Always
 
           ports:
             - containerPort: 8081

@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: discovery-server
-          image: discovery-server:1.0.0-dev
-          imagePullPolicy: IfNotPresent
+          image: sachintp/discovery-server:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8761
           envFrom:
