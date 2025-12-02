@@ -10,6 +10,6 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
   instance:
-    hostname: discovery-service
+    hostname: discovery-server.default.svc.cluster.local
   server:
     eviction-interval-timer-in-ms: 60000

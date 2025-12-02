@@ -113,7 +113,7 @@ spring:
 
         # Admin Dashboard UI
         - id: admin-dashboard-ui
-          uri: http://admin-dashboard
+          uri: http://admin-dashboard.default.svc.cluster.local
           predicates:
             - Path=/ui/admin/**, /admin/**
           filters:
@@ -121,7 +121,7 @@ spring:
 
         # Student Portal UI
         - id: student-portal-ui
-          uri: http://student-portal
+          uri: student-dashboard.default.svc.cluster.local
           predicates:
             - Path=/ui/student/**, /student/**
           filters:
@@ -129,7 +129,7 @@ spring:
 
         # Employer Portal UI
         - id: employer-portal-ui
-          uri: http://employer-portal
+          uri: employer-dashboard.default.svc.cluster.local
           predicates:
             - Path=/ui/employer/**, /employer/**
           filters:
@@ -137,7 +137,7 @@ spring:
 
         # University Portal UI
         - id: university-portal-ui
-          uri: http://university-portal
+          uri: university-dashboard.default.svc.cluster.local
           predicates:
             - Path=/ui/university/**, /university/**
           filters:
@@ -147,7 +147,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discovery-server.default.svc.cluster.local:8761/eureka
     fetch-registry: true
     register-with-eureka: true
 

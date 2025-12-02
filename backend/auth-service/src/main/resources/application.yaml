@@ -6,10 +6,9 @@ spring:
     name: auth-service
 
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/studentcert_auth
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:password}
+    url: jdbc:postgresql://university-postgres.default.svc.cluster.local:5432/university_db
+    username: postgres
+    password: password
 
   jpa:
     hibernate:
@@ -70,4 +69,4 @@ springdoc:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discovery-server.default.svc.cluster.local:8761/eureka
