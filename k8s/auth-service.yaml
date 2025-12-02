@@ -33,6 +33,10 @@ spec:
           value: smtp.gmail.com
         - name: MAIL_PORT
           value: "587"
+        - name: UNIVERSITY_SERVICE_URL
+          value: http://university-service:3002
+        - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+          value: http://discovery-server:8761/eureka
         resources:
           requests:
             memory: "512Mi"

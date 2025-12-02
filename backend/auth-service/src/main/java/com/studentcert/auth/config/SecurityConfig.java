@@ -43,6 +43,20 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/users/universities").permitAll()  // Public endpoint for university list
                 .requestMatchers(HttpMethod.GET, "/api/users/email/**").permitAll()  // For certificate service to fetch user by email
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()  // For certificate service to fetch user by ID
+                // Swagger UI endpoints - comprehensive list
+                .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/swagger-ui.html").permitAll()
+                .requestMatchers("/v3/api-docs/**").permitAll()
+                .requestMatchers("/v3/api-docs").permitAll()
+                .requestMatchers("/api-docs/**").permitAll()
+                .requestMatchers("/api-docs").permitAll()
+                .requestMatchers("/swagger-resources/**").permitAll()
+                .requestMatchers("/swagger-resources").permitAll()
+                .requestMatchers("/configuration/ui").permitAll()
+                .requestMatchers("/configuration/security").permitAll()
+                .requestMatchers("/swagger-config").permitAll()
+                .requestMatchers("/webjars/**").permitAll()
+                .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/auth/logout").authenticated()
                 .requestMatchers("/api/auth/me").authenticated()

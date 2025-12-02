@@ -20,6 +20,15 @@ public class SecurityConfig {
             http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable()) // Explicitly disable CORS - API Gateway handles it
                 .authorizeHttpRequests(auth -> auth
+                    // Swagger UI endpoints
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/swagger-ui.html").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
+                    .requestMatchers("/v3/api-docs").permitAll()
+                    .requestMatchers("/swagger-resources/**").permitAll()
+                    .requestMatchers("/swagger-resources").permitAll()
+                    .requestMatchers("/webjars/**").permitAll()
+                    .requestMatchers("/swagger-config").permitAll()
 //                    .requestMatchers("/api/certificates/upload").hasAnyRole("ADMIN", "UNIVERSITY")
 //                    .requestMatchers("/api/certificates/**").authenticated()
 //                    .requestMatchers("/api/h2-console/**").permitAll()

@@ -17,10 +17,10 @@ spec:
         image: email-service:latest
         imagePullPolicy: Never
         ports:
-        - containerPort: 3005
+        - containerPort: 8093
         env:
         - name: SERVER_PORT
-          value: "3005"
+          value: "8093"
         - name: MAIL_HOST
           value: smtp.gmail.com
         - name: MAIL_PORT
@@ -50,5 +50,5 @@ spec:
   selector:
     app: email-service
   ports:
-  - port: 3005
-    targetPort: 3005
+  - port: 8093
+    targetPort: 8093

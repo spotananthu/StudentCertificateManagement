@@ -13,6 +13,57 @@ spec:
   - host: localhost
     http:
       paths:
+      # Swagger UI paths
+      - path: /swagger-ui
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
+      - path: /v3/api-docs
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
+      - path: /api-docs
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
+      - path: /webjars
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
+      - path: /swagger-resources
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
+      - path: /configuration
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
+      # API paths
+      - path: /api/admin
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
       - path: /auth/login
         pathType: Prefix
         backend:

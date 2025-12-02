@@ -1,0 +1,86 @@
+openapi: 3.0.3
+info:
+  title: Student Certificate Management - Email Notification Service
+  version: 1.0.0
+  description: >
+    Email notification service for the Student Certificate Management System.
+    This service provides email notification capabilities and is primarily event-driven,
+    listening to Kafka topics for email requests and sending notifications.
+    The REST endpoints are minimal and mainly for health checks and monitoring.
+  contact:
+    name: Student Certificate Team
+    email: admin@studentcert.com
+  license:
+    name: MIT License
+    url: https://choosealicense.com/licenses/mit/
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+  - url: https://api.studentcert.com/email
+    description: Production server
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "UP"
+        service:
+          type: string
+          example: "email-notification"
+        description:
+          type: string
+          example: "Event-driven email notification service via Kafka"
+
+    EmailRequest:
+      type: object
+      description: "Email request structure (used internally via Kafka events)"
+      properties:
+        to:
+          type: string
+          format: email
+          example: "user@example.com"
+        subject:
+          type: string
+          example: "Your certificate has been issued"
+        body:
+          type: string
+          example: "Dear User, your certificate has been successfully issued."
+
+paths:
+  /api/health:
+    get:
+      tags:
+        - Health
+      summary: Health check
+      description: Check the health status of the email notification service
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+# Kafka Events Documentation (not REST endpoints)
+x-kafka-events:
+  email_notifications:
+    description: "Kafka topic for email notification requests"
+    message:
+      $ref: '#/components/schemas/EmailRequest'
+    examples:
+      registration_email:
+        summary: "Registration confirmation email"
+        value:
+          to: "user@university.edu"
+          subject: "Your registration to StudentCert is successful"
+          body: "Dear User, Thank you for registering at StudentCert. Your unique UID is: USER123"
+      certificate_issued:
+        summary: "Certificate issuance notification"
+        value:
+          to: "student@university.edu"
+          subject: "Certificate Issued"
+          body: "Your certificate has been successfully issued and is ready for download."

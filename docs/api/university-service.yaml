@@ -1,0 +1,201 @@
+openapi: 3.0.3
+info:
+  title: Student Certificate Management - University Service
+  version: 1.0.0
+  description: >
+    University management service for the Student Certificate Management System.
+    Handles university registration, profile management, and maintains the registry of participating educational institutions.
+  contact:
+    name: Student Certificate Team
+    email: admin@studentcert.com
+  license:
+    name: MIT License
+    url: https://choosealicense.com/licenses/mit/
+
+servers:
+  - url: http://localhost:3002
+    description: Development server
+  - url: https://api.studentcert.com/universities
+    description: Production server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UniversityRegisterRequest:
+      type: object
+      required:
+        - uid
+        - universityName
+        - email
+      properties:
+        uid:
+          type: string
+          example: "UNIV001"
+        universityName:
+          type: string
+          example: "Stanford University"
+        email:
+          type: string
+          format: email
+          example: "admin@stanford.edu"
+        address:
+          type: string
+          example: "450 Serra Mall, Stanford, CA 94305"
+        phone:
+          type: string
+          example: "+1-650-723-2300"
+
+    UniversityUpdateRequest:
+      type: object
+      properties:
+        universityName:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        verified:
+          type: boolean
+
+    UniversityResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        uid:
+          type: string
+        universityName:
+          type: string
+        email:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        verified:
+          type: boolean
+        registrationDate:
+          type: string
+          format: date-time
+
+paths:
+  /universities:
+    post:
+      tags:
+        - Universities
+      summary: Register a university
+      description: Register a new university in the system
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniversityRegisterRequest'
+      responses:
+        '201':
+          description: University registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversityResponse'
+        '400':
+          description: Invalid university registration request
+
+    get:
+      tags:
+        - Universities
+      summary: List universities
+      description: Get all universities, optionally filter by verification status
+      parameters:
+        - name: verified
+          in: query
+          description: Filter by verification status
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Universities retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UniversityResponse'
+
+  /universities/{id}:
+    get:
+      tags:
+        - Universities
+      summary: Get university by ID
+      description: Retrieve a specific university by its ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: University retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversityResponse'
+        '404':
+          description: University not found
+
+    put:
+      tags:
+        - Universities
+      summary: Update university
+      description: Update university information
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UniversityUpdateRequest'
+      responses:
+        '200':
+          description: University updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversityResponse'
+        '404':
+          description: University not found
+
+    delete:
+      tags:
+        - Universities
+      summary: Delete university
+      description: Remove a university from the system
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: University deleted successfully
+        '404':
+          description: University not found

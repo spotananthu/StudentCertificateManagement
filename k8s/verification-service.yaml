@@ -23,6 +23,8 @@ spec:
           value: "3004"
         - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
           value: http://discovery-server:8761/eureka
+        - name: SERVICES_CERTIFICATE_URL
+          value: http://certificate-service:3003
         resources:
           requests:
             memory: "512Mi"

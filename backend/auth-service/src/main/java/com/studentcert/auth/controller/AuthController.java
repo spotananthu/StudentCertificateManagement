@@ -12,6 +12,13 @@ import com.studentcert.auth.service.JwtService;
 import com.studentcert.auth.service.UidGenerationService;
 import com.studentcert.auth.service.UniversityServiceClient;
 import com.studentcert.auth.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.logging.Logger;
 import org.apache.kafka.common.protocol.types.Field;
@@ -21,6 +28,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Authentication", description = "Authentication and user management endpoints")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -48,8 +56,17 @@ public class AuthController {
 
     Logger logger = Logger.getLogger(AuthController.class.getName());
 
+    @Operation(summary = "User login", description = "Authenticate a user and return a JWT token")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Login successful", 
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
+        @ApiResponse(responseCode = "401", description = "Invalid credentials",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)))
+    })
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> login(
+            @Parameter(description = "User login credentials", required = true)
+            @Valid @RequestBody LoginRequest loginRequest) {
         try {
             User user = authService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
             String token = jwtService.generateToken(user);
@@ -78,8 +95,17 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "User registration", description = "Register a new user (Student, University, Employer, or Admin)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Registration successful", 
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid input or registration failed",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)))
+    })
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AuthResponse> register(
+            @Parameter(description = "User registration details", required = true)
+            @Valid @RequestBody RegisterRequest registerRequest) {
         try {
             // Validate: Students MUST select a university UID
             if (registerRequest.getRole() == UserRole.STUDENT && 
@@ -171,8 +197,15 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "User logout", description = "Logout a user (client should remove the token)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Logout successful", 
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)))
+    })
     @PostMapping("/logout")
-    public ResponseEntity<AuthResponse> logout(@AuthenticationPrincipal User user) {
+    public ResponseEntity<AuthResponse> logout(
+            @Parameter(description = "Authenticated user", hidden = true)
+            @AuthenticationPrincipal User user) {
         // In a real implementation, you might blacklist the JWT token
         // For now, we'll just return success since the frontend handles token removal
         AuthResponse response = AuthResponse.builder()
@@ -183,8 +216,17 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Get current user", description = "Get details of the currently authenticated user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "User details retrieved successfully", 
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))),
+        @ApiResponse(responseCode = "401", description = "User not authenticated",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class)))
+    })
     @GetMapping("/me")
-    public ResponseEntity<AuthResponse> getCurrentUser(@AuthenticationPrincipal User user) {
+    public ResponseEntity<AuthResponse> getCurrentUser(
+            @Parameter(description = "Authenticated user", hidden = true)
+            @AuthenticationPrincipal User user) {
         try {
             AuthResponse response = AuthResponse.builder()
                 .success(true)

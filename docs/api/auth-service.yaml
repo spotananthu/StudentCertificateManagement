@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  title: Student Certificate Management - Authentication Service
+  version: 1.0.0
+  description: >
+    Authentication and authorization service for the Student Certificate Management System.
+    Handles user registration, login, JWT token management, and role-based access control.
+  contact:
+    name: Student Certificate Team
+    email: admin@studentcert.com
+  license:
+    name: MIT License
+    url: https://choosealicense.com/licenses/mit/
+
+servers:
+  - url: http://localhost:8081
+    description: Development server
+  - url: https://api.studentcert.com/auth
+    description: Production server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@university.edu"
+        password:
+          type: string
+          format: password
+          example: "securePassword123"
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+        - role
+        - fullName
+      properties:
+        email:
+          type: string
+          format: email
+          example: "student@university.edu"
+        password:
+          type: string
+          format: password
+          example: "securePassword123"
+        role:
+          type: string
+          enum: [STUDENT, UNIVERSITY, EMPLOYER, ADMIN]
+          example: "STUDENT"
+        fullName:
+          type: string
+          example: "John Doe"
+        universityUid:
+          type: string
+          description: "Required for STUDENT role"
+          example: "UNIV001"
+        universityName:
+          type: string
+          description: "Required for UNIVERSITY role"
+          example: "Stanford University"
+        universityAddress:
+          type: string
+          example: "450 Serra Mall, Stanford, CA 94305"
+        universityPhone:
+          type: string
+          example: "+1-650-723-2300"
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UserData'
+
+    UserData:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        fullName:
+          type: string
+        role:
+          type: string
+        token:
+          type: string
+        uid:
+          type: string
+        universityUid:
+          type: string
+
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate a user and return a JWT token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /api/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: User registration
+      description: Register a new user (Student, University, Employer, or Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid input or registration failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /api/auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: User logout
+      description: Logout a user (client should remove the token)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /api/auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user
+      description: Get details of the currently authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'

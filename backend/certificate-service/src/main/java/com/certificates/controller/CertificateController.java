@@ -6,6 +6,13 @@ import com.certificates.service.CertificateFileService;
 import com.certificates.service.CertificateService;
 import com.certificates.service.PdfService;
 import com.certificates.util.JwtUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -17,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@Tag(name = "Certificates", description = "Certificate management and processing endpoints")
 @RestController
 @RequestMapping("/certificates")
 @RequiredArgsConstructor
@@ -27,9 +35,17 @@ public class CertificateController {
     private final JwtUtil jwtUtil;
     Logger logger = LoggerFactory.getLogger(CertificateController.class);
 
+    @Operation(summary = "Issue a certificate", description = "Issue a new certificate with digital signature")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Certificate issued successfully", 
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Certificate.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid certificate request")
+    })
     @PostMapping
     public ResponseEntity<Certificate> issueCertificate(
+            @Parameter(description = "Certificate issuance request", required = true)
             @Validated @RequestBody CertificateIssueRequest req,
+            @Parameter(description = "JWT Bearer token", required = true)
             @RequestHeader(value = "Authorization", required = true) String authHeader) {
         logger.info("Issuing certificate with certificate data: {}", req);
         
@@ -41,9 +57,17 @@ public class CertificateController {
                 .body(service.issueCertificate(req, universityUserId));
     }
 
+    @Operation(summary = "List certificates", description = "Get all certificates or filter by status. Students only see their own certificates.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Certificates retrieved successfully", 
+            content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping
     public ResponseEntity<List<Certificate>> listCertificates(
+            @Parameter(description = "Filter by certificate status (optional)")
             @RequestParam(required = false) String status,
+            @Parameter(description = "JWT Bearer token (optional)")
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
         logger.info("Listing certificates with status: {}", status);
         

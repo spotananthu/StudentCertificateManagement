@@ -1,0 +1,305 @@
+openapi: 3.0.3
+info:
+  title: Student Certificate Management - Certificate Service
+  version: 1.0.0
+  description: >
+    Certificate issuance, management, and file handling service for the Student Certificate Management System.
+    Handles certificate creation, digital signing, PDF generation, and certificate storage with cryptographic verification.
+  contact:
+    name: Student Certificate Team
+    email: admin@studentcert.com
+  license:
+    name: MIT License
+    url: https://choosealicense.com/licenses/mit/
+
+servers:
+  - url: http://localhost:3003
+    description: Development server
+  - url: https://api.studentcert.com/certificates
+    description: Production server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Certificate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        certificateNumber:
+          type: string
+        studentName:
+          type: string
+        courseName:
+          type: string
+        universityName:
+          type: string
+        issueDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [ACTIVE, REVOKED, EXPIRED]
+        digitalSignature:
+          type: string
+        studentEmail:
+          type: string
+          format: email
+
+    CertificateIssueRequest:
+      type: object
+      required:
+        - studentName
+        - studentEmail
+        - courseName
+        - universityName
+      properties:
+        studentName:
+          type: string
+          example: "John Doe"
+        studentEmail:
+          type: string
+          format: email
+          example: "john.doe@student.edu"
+        courseName:
+          type: string
+          example: "Computer Science Degree"
+        universityName:
+          type: string
+          example: "Stanford University"
+        issueDate:
+          type: string
+          format: date
+          example: "2024-12-01"
+
+    CertificateUpdateRequest:
+      type: object
+      properties:
+        certificateNumber:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, REVOKED, EXPIRED]
+
+    CertificateRevocationRequest:
+      type: object
+      required:
+        - certificateNumber
+        - reason
+      properties:
+        certificateNumber:
+          type: string
+        reason:
+          type: string
+
+    FileUploadResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        fileId:
+          type: string
+
+paths:
+  /certificates:
+    post:
+      tags:
+        - Certificates
+      summary: Issue a certificate
+      description: Issue a new certificate with digital signature
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateIssueRequest'
+      responses:
+        '201':
+          description: Certificate issued successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+        '400':
+          description: Invalid certificate request
+
+    get:
+      tags:
+        - Certificates
+      summary: List certificates
+      description: Get all certificates or filter by status. Students only see their own certificates.
+      parameters:
+        - name: status
+          in: query
+          description: Filter by certificate status
+          required: false
+          schema:
+            type: string
+            enum: [ACTIVE, REVOKED, EXPIRED]
+      security:
+        - bearerAuth: []
+        - {}
+      responses:
+        '200':
+          description: Certificates retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Certificate'
+
+    put:
+      tags:
+        - Certificates
+      summary: Update a certificate
+      description: Update certificate details
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateUpdateRequest'
+      responses:
+        '200':
+          description: Certificate updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+
+  /certificates/{certificateNumber}:
+    get:
+      tags:
+        - Certificates
+      summary: Get certificate by number
+      description: Retrieve a specific certificate by its certificate number
+      parameters:
+        - name: certificateNumber
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Certificate retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Certificate'
+        '404':
+          description: Certificate not found
+
+  /certificates/revoke:
+    post:
+      tags:
+        - Certificates
+      summary: Revoke a certificate
+      description: Revoke an existing certificate
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateRevocationRequest'
+      responses:
+        '200':
+          description: Certificate revoked successfully
+
+  /certificates/batch-issue:
+    post:
+      tags:
+        - Certificates
+      summary: Batch issue certificates
+      description: Issue multiple certificates at once
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                certificates:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CertificateIssueRequest'
+      responses:
+        '201':
+          description: Batch issuance completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                  message:
+                    type: string
+
+  /certificates/upload:
+    post:
+      tags:
+        - Certificates
+      summary: Upload certificate file
+      description: Upload a certificate-related file
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                type:
+                  type: string
+      responses:
+        '201':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FileUploadResponse'
+
+  /certificates/{certificateId}/pdf:
+    get:
+      tags:
+        - Certificates
+      summary: Download certificate PDF
+      description: Generate and download certificate as PDF
+      parameters:
+        - name: certificateId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: PDF generated successfully
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary

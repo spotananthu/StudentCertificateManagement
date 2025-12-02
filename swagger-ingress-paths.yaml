@@ -1,0 +1,68 @@
+# Add these Swagger paths to your existing ingress.yaml
+# Insert these before the existing paths for each host
+
+# For localhost host - add these paths:
+      # Swagger UI paths
+      - path: /swagger-ui
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
+      - path: /v3/api-docs
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port:
+              number: 8081
+      - path: /api/swagger-ui
+        pathType: Prefix
+        backend:
+          service:
+            name: certificate-service
+            port:
+              number: 3003
+      - path: /api/v3/api-docs
+        pathType: Prefix
+        backend:
+          service:
+            name: certificate-service
+            port:
+              number: 3003
+      - path: /university-swagger-ui
+        pathType: Prefix
+        backend:
+          service:
+            name: university-service
+            port:
+              number: 3002
+      - path: /university-api-docs
+        pathType: Prefix
+        backend:
+          service:
+            name: university-service
+            port:
+              number: 3002
+      - path: /verify-swagger-ui
+        pathType: Prefix
+        backend:
+          service:
+            name: verification-service
+            port:
+              number: 3004
+      - path: /verify-api-docs
+        pathType: Prefix
+        backend:
+          service:
+            name: verification-service
+            port:
+              number: 3004
+      - path: /email-swagger-ui
+        pathType: Prefix
+        backend:
+          service:
+            name: email-service
+            port:
+              number: 3005

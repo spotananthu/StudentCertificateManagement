@@ -1,0 +1,188 @@
+openapi: 3.0.3
+info:
+  title: Student Certificate Management - Verification Service
+  version: 1.0.0
+  description: >
+    Certificate verification service for the Student Certificate Management System.
+    Handles digital signature verification, certificate authenticity checks, and public verification endpoints
+    for employers and other parties to verify certificate validity.
+  contact:
+    name: Student Certificate Team
+    email: admin@studentcert.com
+  license:
+    name: MIT License
+    url: https://choosealicense.com/licenses/mit/
+
+servers:
+  - url: http://localhost:3004
+    description: Development server
+  - url: https://api.studentcert.com/verification
+    description: Production server
+
+components:
+  schemas:
+    VerificationRequest:
+      type: object
+      required:
+        - certificateNumber
+      properties:
+        certificateNumber:
+          type: string
+          example: "CERT-2024-001"
+
+    BulkVerificationRequest:
+      type: object
+      required:
+        - certificateNumbers
+      properties:
+        certificateNumbers:
+          type: array
+          items:
+            type: string
+          example: ["CERT-2024-001", "CERT-2024-002"]
+
+    VerificationResult:
+      type: object
+      properties:
+        certificateNumber:
+          type: string
+        valid:
+          type: boolean
+        studentName:
+          type: string
+        courseName:
+          type: string
+        universityName:
+          type: string
+        issueDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [ACTIVE, REVOKED, EXPIRED]
+        verificationDate:
+          type: string
+          format: date-time
+
+    VerificationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/VerificationResult'
+
+    BulkVerificationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            totalRequested:
+              type: integer
+            successfullyVerified:
+              type: integer
+            failed:
+              type: integer
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/VerificationResult'
+
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "UP"
+        service:
+          type: string
+          example: "verification-service"
+
+paths:
+  /api/verify:
+    post:
+      tags:
+        - Verification
+      summary: Verify certificate
+      description: Verify certificate by certificate number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerificationRequest'
+      responses:
+        '200':
+          description: Verification completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+        '400':
+          description: Invalid verification request
+
+  /api/verify/bulk:
+    post:
+      tags:
+        - Verification
+      summary: Bulk verify certificates
+      description: Verify multiple certificates at once
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkVerificationRequest'
+      responses:
+        '200':
+          description: Bulk verification completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkVerificationResponse'
+        '400':
+          description: Invalid bulk verification request
+
+  /api/verify/{certificateNumber}:
+    get:
+      tags:
+        - Verification
+      summary: Verify certificate by URL
+      description: Verify certificate using certificate number in URL path (public endpoint)
+      parameters:
+        - name: certificateNumber
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "CERT-2024-001"
+      responses:
+        '200':
+          description: Verification completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+        '400':
+          description: Invalid certificate number
+
+  /api/health:
+    get:
+      tags:
+        - Health
+      summary: Health check
+      description: Check the health status of the verification service
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
