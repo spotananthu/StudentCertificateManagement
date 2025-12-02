@@ -6,11 +6,14 @@ import com.certificates.service.CertificateFileService;
 import com.certificates.service.CertificateService;
 import com.certificates.service.PdfService;
 import com.certificates.util.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +28,13 @@ public class CertificateController {
     private final CertificateFileService fileService;
     private final PdfService pdfService;
     private final JwtUtil jwtUtil;
-    Logger logger = LoggerFactory.getLogger(CertificateController.class);
+    private Logger logger = LoggerFactory.getLogger(CertificateController.class);
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @PostMapping
     public ResponseEntity<Certificate> issueCertificate(
@@ -36,7 +45,37 @@ public class CertificateController {
         // Extract university ID from JWT token
         String token = authHeader.substring(7); // Remove "Bearer " prefix
         Long universityUserId = jwtUtil.extractUserId(token);
-        
+
+        /* Below code enables event driven notification management with kafka
+         * Ensure you setup kafka, and it is in running state*/
+        try {
+
+            String courseName = req.getCourseName();
+            String studentName = req.getStudentName();
+
+            EmailRequest emailRequest = new EmailRequest();
+            emailRequest.setTo(req.getStudentEmail());
+            emailRequest.setSubject("Congratulations on Your Certificate Issuance!");
+
+
+            String emailBody = "Dear " + studentName + ",\n\n" +
+                    "Congratulations on completing the \"" + courseName + "\" course!\n\n" +
+                    "Your dedication and hard work have truly paid off. Remember, " +
+                    "the end of this course is just the beginning of a journey to greater achievements. " +
+                    "Keep pushing boundaries and striving for excellence!\n\n" +
+                    "You can now download your certificate from our portal" +"\n\n" +
+                    "Best regards,\n" +
+                    "StudentCert Team";
+
+            emailRequest.setBody(emailBody);
+
+            String emailJson = objectMapper.writeValueAsString(emailRequest);
+            kafkaTemplate.send("certificate_notifications", emailJson);
+            logger.info("Published registration email event to Kafka for certificate service: " + req.getStudentEmail());
+        } catch (Exception e) {
+            logger.warn("Failed to publish email event to Kafka for certificate service: " + req.getStudentEmail());
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.issueCertificate(req, universityUserId));
     }
