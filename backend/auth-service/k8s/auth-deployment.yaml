@@ -29,6 +29,19 @@ spec:
                 name: auth-service-config
             - secretRef:
                 name: auth-service-secret
+          env:
+            - name: DB_HOST
+              value: "auth-postgres.default.svc.cluster.local"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "auth_db"
+            - name: DB_USERNAME
+              value: "postgres"
+            - name: DB_PASSWORD
+              value: "postgres"
+            - name: SERVER_PORT
+              value: "8081"
 
           # Simple TCP-based health checks (no actuator in pom.xml)
           readinessProbe:
