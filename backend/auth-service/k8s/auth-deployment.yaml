@@ -37,9 +37,20 @@ spec:
             - name: DB_NAME
               value: "auth_db"
             - name: DB_USERNAME
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key: DB_USERNAME
             - name: DB_PASSWORD
-              value: "postgres"
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key: DB_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key: JWT_SECRET
             - name: SERVER_PORT
               value: "8081"
 
