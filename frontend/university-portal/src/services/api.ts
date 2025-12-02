@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API Gateway URL - All requests will go through the gateway
-const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
+export const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:8080';
 
 // Create main API instance for all endpoints (routes through API Gateway)
 const api = axios.create({
@@ -45,7 +45,7 @@ api.interceptors.response.use(
   (error) => {
     // Handle network errors
     if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-      error.message = 'Unable to connect to API Gateway. Please ensure the API Gateway is running on http://localhost:9090';
+      error.message = 'Unable to connect to API Gateway. Please ensure it is running on http://localhost:8080';
     } else if (error.code === 'ECONNABORTED') {
       error.message = 'Request timeout. Please try again.';
     } else if (error.response?.status === 401) {

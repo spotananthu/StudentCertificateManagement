@@ -1,12 +1,13 @@
 import axios from 'axios';
 
+// API Gateway URL - Configurable for K8s / Prod
+export const API_GATEWAY_BASE_URL =
+  process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:8080';
+
 // Get token for requests
 const getToken = () => localStorage.getItem('employer_token');
 
-// API Gateway URL - All requests will go through the gateway
-const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
-
-// Create main API instance for all endpoints (routes through API Gateway)
+// Axios client for all API calls through the gateway
 const api = axios.create({
   baseURL: API_GATEWAY_BASE_URL,
   headers: {
@@ -14,7 +15,7 @@ const api = axios.create({
   },
 });
 
-// Add token to requests
+// Attach JWT token
 api.interceptors.request.use((config) => {
   const token = getToken();
   if (token) {
@@ -23,12 +24,11 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle response errors
+// Auto-logout on 401
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Unauthorized - clear auth data
       localStorage.removeItem('employer_token');
       localStorage.removeItem('employer_user');
       window.location.href = '/login';
@@ -37,5 +37,5 @@ api.interceptors.response.use(
   }
 );
 
-export { api };
 export default api;
+export { api };

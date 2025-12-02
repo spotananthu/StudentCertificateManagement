@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { VerificationResponse, BulkVerificationRequest, BulkVerificationResponse } from '../types';
 
-const VERIFICATION_API_URL = 'http://localhost:9090'; // API Gateway port
+import { API_GATEWAY_BASE_URL } from './api';
+
+const VERIFICATION_API_URL = API_GATEWAY_BASE_URL;
 
 export const VerificationService = {
   async verifyCertificate(certificateNumber: string): Promise<VerificationResponse> {

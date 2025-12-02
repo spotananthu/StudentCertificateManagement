@@ -1,7 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 
 // Verification service runs on port 3004
-const VERIFICATION_API_BASE_URL = process.env.REACT_APP_VERIFICATION_API_BASE_URL || 'http://localhost:9090';
+import { API_GATEWAY_BASE_URL } from './api';
+
+
+const VERIFICATION_API_BASE_URL = API_GATEWAY_BASE_URL;
 
 // Verification Types
 export interface VerificationRequest {

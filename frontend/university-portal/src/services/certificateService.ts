@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
+import { API_GATEWAY_BASE_URL } from './api';
 import { Certificate, CertificateIssueRequest, CertificateUpdateRequest, CertificateRevocationRequest, FileUploadResponse } from '../types';
 
 // Use API Gateway for certificate service calls
-const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
 
 const certificateApi = axios.create({
   baseURL: API_GATEWAY_BASE_URL,

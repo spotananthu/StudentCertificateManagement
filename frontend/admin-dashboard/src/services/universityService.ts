@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API_GATEWAY_BASE_URL } from './api';
 
-const UNIVERSITY_API_URL = 'http://localhost:9090/universities';
+const UNIVERSITY_API_URL = `${API_GATEWAY_BASE_URL}/universities`;
 
 export interface University {
   universityId: string;

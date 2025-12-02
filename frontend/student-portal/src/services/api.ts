@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // API Gateway URL - All requests will go through the gateway
-const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
+export const API_GATEWAY_BASE_URL =
+  process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:8080';
 
 // Create main API instance for all endpoints (routes through API Gateway)
 const api = axios.create({

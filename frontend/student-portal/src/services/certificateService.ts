@@ -1,8 +1,8 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
+import { API_GATEWAY_BASE_URL } from './api';
 import { Certificate, CertificateIssueRequest, CertificateUpdateRequest, CertificateRevocationRequest, FileUploadResponse } from '../types/certificate';
 
 // API Base URL - should be configured via environment variables
-const API_GATEWAY_BASE_URL = process.env.REACT_APP_API_GATEWAY_BASE_URL || 'http://localhost:9090';
 
 // Create axios instance with common configuration
 const apiClient = axios.create({

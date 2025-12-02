@@ -1,4 +1,5 @@
-import api, { authApi } from './api';
+import api, { authApi, API_GATEWAY_BASE_URL } from './api';
+
 import { 
   DashboardStats, 
   User, 
@@ -8,6 +9,8 @@ import {
   PaginatedResponse, 
   ApiResponse 
 } from '../types';
+
+const GATEWAY_BASE_URL = API_GATEWAY_BASE_URL; // just an alias for readability
 
 export const adminService = {
   // Dashboard data
@@ -509,8 +512,8 @@ export const adminService = {
 
       // 1. Check API Gateway (has actuator health)
       try {
-        const gatewayResponse = await fetch('http://localhost:9090/actuator/health', {
-          method: 'GET',
+        const gatewayResponse = await fetch(`${GATEWAY_BASE_URL}/actuator/health`, {
+          method: 'GET',  
           headers: { 'Content-Type': 'application/json' }
         });
         if (gatewayResponse.ok) {
@@ -543,50 +546,31 @@ export const adminService = {
         console.warn('Gateway health check failed:', error);
       }
 
-      // 2. Check Discovery Server (Eureka) through gateway or direct
-      try {
-        console.log('Checking discovery server health...');
-        // First try through the gateway which should have CORS configured
-        let discoveryResponse = await fetch('http://localhost:9090/actuator/health', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        
-        if (discoveryResponse.ok) {
-          const gatewayHealth = await discoveryResponse.json();
-          console.log('Gateway health (checking for discovery):', gatewayHealth);
-          
-          // Check if discovery is healthy in the gateway's health info
-          if (gatewayHealth.components?.discoveryComposite?.status === 'UP' ||
-              gatewayHealth.status === 'UP') {
-            serviceStatuses.discovery = 'healthy';
-            healthyCount++;
-            console.log('Discovery server marked as healthy via gateway');
-          }
-        } else {
-          // Fallback: try direct connection (might fail due to CORS but worth trying)
-          try {
-            discoveryResponse = await fetch('http://localhost:8761/actuator/health', {
-              method: 'GET',
-              headers: { 'Content-Type': 'application/json' }
-            });
-            
-            if (discoveryResponse.ok) {
-              const discoveryHealth = await discoveryResponse.json();
-              console.log('Discovery health data (direct):', discoveryHealth);
-              if (discoveryHealth.status === 'UP') {
-                serviceStatuses.discovery = 'healthy';
-                healthyCount++;
-                console.log('Discovery server marked as healthy (direct)');
-              }
-            }
-          } catch (directError) {
-            console.warn('Direct discovery server check failed (likely CORS):', directError);
-          }
-        }
-      } catch (error) {
-        console.warn('Discovery server health check failed:', error);
-      }
+      // 2. Check Discovery Server (Eureka) status via gateway health info
+try {
+  console.log('Checking discovery server health via gateway...');
+  const discoveryResponse = await fetch(`${GATEWAY_BASE_URL}/actuator/health`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  });
+
+  if (discoveryResponse.ok) {
+    const gatewayHealth = await discoveryResponse.json();
+    console.log('Gateway health (checking for discovery):', gatewayHealth);
+
+    if (
+      gatewayHealth.components?.discoveryComposite?.status === 'UP' ||
+      gatewayHealth.status === 'UP'
+    ) {
+      serviceStatuses.discovery = 'healthy';
+      healthyCount++;
+      console.log('Discovery server marked as healthy via gateway');
+    }
+  }
+} catch (error) {
+  console.warn('Discovery server health check failed:', error);
+}
+
 
       // 3. Double-check services by testing actual API endpoints through gateway
       const apiTests = [
@@ -599,7 +583,7 @@ export const adminService = {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 2000);
           
-          const response = await fetch(`http://localhost:9090${test.endpoint}`, {
+          const response = await fetch(`${GATEWAY_BASE_URL}${test.endpoint}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
             signal: controller.signal
@@ -622,7 +606,7 @@ export const adminService = {
       // 4. Check email notification service (Kafka consumer without HTTP endpoints)
       try {
         // Since it's a Kafka consumer without HTTP endpoints, check if process is running
-        await fetch('http://localhost:8080/', {
+        await fetch(`${GATEWAY_BASE_URL}/`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' }
         });
