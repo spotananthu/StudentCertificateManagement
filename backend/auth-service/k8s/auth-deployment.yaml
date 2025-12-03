@@ -5,7 +5,7 @@ metadata:
   labels:
     app: auth-service
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: auth-service
@@ -16,45 +16,40 @@ spec:
     spec:
       containers:
         - name: auth-service
-          # Change this if you push to a registry:
-          # e.g. my-dockerhub-user/auth-service:1.0.0
           image: sachintp/auth-service:latest
           imagePullPolicy: Always
 
           ports:
             - containerPort: 8081
 
-          envFrom:
-            - configMapRef:
-                name: auth-service-config
-            - secretRef:
-                name: auth-service-secret
           env:
-            - name: DB_HOST
-              value: "auth-postgres.default.svc.cluster.local"
-            - name: DB_PORT
-              value: "5432"
-            - name: DB_NAME
-              value: "auth_db"
-            - name: DB_USERNAME
+            # ✔ Correct Datasource Configuration
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://auth-postgres.default.svc.cluster.local:5432/studentcert_auth"
+
+            - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: auth-service-secret
                   key: DB_USERNAME
-            - name: DB_PASSWORD
+
+            - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: auth-service-secret
                   key: DB_PASSWORD
+
+            # ✔ Spring Boot server port
+            - name: SERVER_PORT
+              value: "8081"
+
+            # ✔ JWT Secret for token signing
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: auth-service-secret
                   key: JWT_SECRET
-            - name: SERVER_PORT
-              value: "8081"
 
-          # Simple TCP-based health checks (no actuator in pom.xml)
           readinessProbe:
             tcpSocket:
               port: 8081
